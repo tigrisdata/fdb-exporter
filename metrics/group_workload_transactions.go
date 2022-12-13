@@ -15,42 +15,26 @@
 package metrics
 
 import (
-	"fmt"
-
+	"github.com/rs/zerolog/log"
 	"github.com/tigrisdata/fdb-exporter/models"
-	"github.com/uber-go/tally"
 )
 
 type WorkloadTransactionsMetricGroup struct {
 	MetricGroup
 }
 
-func NewWorkloadTransactionsMetricGroup() *WorkloadTransactionsMetricGroup {
-	w := WorkloadTransactionsMetricGroup{}
-	w.scopes = make(map[string]tally.Scope)
+func NewWorkloadTransactionsMetricGroup(mInfo *MetricInfo) *WorkloadTransactionsMetricGroup {
+	w := WorkloadTransactionsMetricGroup{*NewMetricGroup("transactions", mInfo.scopes["workload"], mInfo)}
+	w.AddScope(mInfo.scopes["workload"], "started")
 	return &w
 }
 
 func (w *WorkloadTransactionsMetricGroup) getValidTagsKeys(scopeName string) []string {
-	if scopeName == "default" {
-		return []string{
-			"env",
-			"service",
-			"version",
-			"cluster",
-		}
-	} else if scopeName == "started" {
-		return []string{
-			"env",
-			"service",
-			"version",
-			"cluster",
-			"priority",
-		}
+	if scopeName == "started" {
+		return append(getBaseTagKeys(), "priority")
 	} else {
-		fmt.Println("unknown scope name")
+		return getBaseTagKeys()
 	}
-	return nil
 }
 
 func (w *WorkloadTransactionsMetricGroup) getTags(scopeName string, priority string) map[string]string {
@@ -61,33 +45,23 @@ func (w *WorkloadTransactionsMetricGroup) getTags(scopeName string, priority str
 		tags["priority"] = priority
 		return StandardizeTags(tags, w.getValidTagsKeys(scopeName))
 	} else {
-		fmt.Println("unknown scope")
+		log.Error().Msg("unknown scope")
 	}
 	return nil
 }
 
-func (w *WorkloadTransactionsMetricGroup) SetStatus(status *models.FullStatus) {
-	w.status = status
-}
-
-func (w *WorkloadTransactionsMetricGroup) InitScopes() {
-	// two different scopes can have the same name if they need to have different tag set
-	w.scopes["default"] = WorkloadScope.SubScope("transactions")
-	w.scopes["started"] = WorkloadScope.SubScope("transactions")
-}
-
-func (w *WorkloadTransactionsMetricGroup) GetMetrics() {
+func (w *WorkloadTransactionsMetricGroup) GetMetrics(status *models.FullStatus) {
 	metrics := map[string]int{
-		"committed":                    w.status.Cluster.Workload.Transactions.Committed.Counter,
-		"conflicted":                   w.status.Cluster.Workload.Transactions.Conflicted.Counter,
-		"rejected_for_queued_too_long": w.status.Cluster.Workload.Transactions.RejectedForQueuedTooLong.Counter,
+		"committed":                    status.Cluster.Workload.Transactions.Committed.Counter,
+		"conflicted":                   status.Cluster.Workload.Transactions.Conflicted.Counter,
+		"rejected_for_queued_too_long": status.Cluster.Workload.Transactions.RejectedForQueuedTooLong.Counter,
 	}
 	for name, value := range metrics {
 		SetIntGauge(w.scopes["default"], name, w.getTags("default", ""), value)
 	}
 
 	// The total number of started transactions are started transactions with batch + default + immediate priorities
-	SetIntGauge(w.scopes["started"], "started", w.getTags("started", "batch"), w.status.Cluster.Workload.Transactions.StartedBatchPriority.Counter)
-	SetIntGauge(w.scopes["started"], "started", w.getTags("started", "default"), w.status.Cluster.Workload.Transactions.StartedDefaultPriority.Counter)
-	SetIntGauge(w.scopes["started"], "started", w.getTags("started", "immediate"), w.status.Cluster.Workload.Transactions.StartedImmediatePriority.Counter)
+	SetIntGauge(w.scopes["started"], "started", w.getTags("started", "batch"), status.Cluster.Workload.Transactions.StartedBatchPriority.Counter)
+	SetIntGauge(w.scopes["started"], "started", w.getTags("started", "default"), status.Cluster.Workload.Transactions.StartedDefaultPriority.Counter)
+	SetIntGauge(w.scopes["started"], "started", w.getTags("started", "immediate"), status.Cluster.Workload.Transactions.StartedImmediatePriority.Counter)
 }

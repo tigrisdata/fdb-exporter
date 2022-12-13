@@ -12,19 +12,15 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package metrics
+package log
 
-import (
-	"fmt"
+import "github.com/rs/zerolog/log"
 
-	"github.com/uber-go/tally"
-)
+func E(err error) bool {
+	if err == nil {
+		return false
+	}
 
-var ClusterScope tally.Scope
-var WorkloadScope tally.Scope
-
-func InitClusterMetrics() {
-	ClusterScope = FdbScope.SubScope("cluster")
-	WorkloadScope = ClusterScope.SubScope("workload")
-	fmt.Println(ClusterScope)
+	log.Error().CallerSkipFrame(2).Msg("error")
+	return true
 }

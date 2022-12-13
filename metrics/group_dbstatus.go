@@ -14,30 +14,17 @@
 
 package metrics
 
-import (
-	"github.com/tigrisdata/fdb-exporter/models"
-	"github.com/uber-go/tally"
-)
+import "github.com/tigrisdata/fdb-exporter/models"
 
 type DbStatusMetricGroup struct {
 	MetricGroup
 }
 
-func NewDbStatusMetricGroup() *DbStatusMetricGroup {
-	d := DbStatusMetricGroup{}
-	d.scopes = make(map[string]tally.Scope)
-	return &d
+func NewDbStatusMetricGroup(mInfo *MetricInfo) *DbStatusMetricGroup {
+	return &DbStatusMetricGroup{*NewMetricGroup("status", mInfo.scopes["client"], mInfo)}
 }
 
-func (d *DbStatusMetricGroup) SetStatus(status *models.FullStatus) {
-	d.status = status
-}
-
-func (d *DbStatusMetricGroup) InitScopes() {
-	d.scopes["default"] = ClientScope.SubScope("status")
-}
-
-func (d *DbStatusMetricGroup) GetMetrics() {
-	SetBoolGauge(d.scopes["default"], "available", GetBaseTags(), d.status.Client.DatabaseStatus.Available)
-	SetBoolGauge(d.scopes["default"], "healthy", GetBaseTags(), d.status.Client.DatabaseStatus.Healthy)
+func (d *DbStatusMetricGroup) GetMetrics(status *models.FullStatus) {
+	SetBoolGauge(d.scopes["default"], "available", GetBaseTags(), status.Client.DatabaseStatus.Available)
+	SetBoolGauge(d.scopes["default"], "healthy", GetBaseTags(), status.Client.DatabaseStatus.Healthy)
 }

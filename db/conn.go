@@ -3,9 +3,10 @@ package db
 import (
 	"encoding/json"
 	"fmt"
+	"os"
+
 	"github.com/apple/foundationdb/bindings/go/src/fdb"
 	"github.com/tigrisdata/fdb-exporter/models"
-	"os"
 )
 
 func getFdb() fdb.Database {

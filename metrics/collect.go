@@ -3,9 +3,10 @@ package metrics
 import (
 	"context"
 	"fmt"
-	"github.com/tigrisdata/fdb-exporter/db"
 	"os"
 	"time"
+
+	"github.com/tigrisdata/fdb-exporter/db"
 )
 
 func Collect() {

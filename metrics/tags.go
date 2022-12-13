@@ -28,36 +28,20 @@ func mergeTags(tagSets ...map[string]string) map[string]string {
 }
 
 func getEnv() string {
-	env := os.Getenv("ENVIRONMENT")
-	if env == "" {
-		env = "default_env"
-	}
-	return env
+	return getEnvOrDefault("ENVIRONMENT", "default_env")
 }
 
 func getService() string {
-	service := os.Getenv("SERVICE")
-	if service == "" {
-		service = "default_service"
-	}
-	return service
+	return getEnvOrDefault("SERVICE", "default_service")
 }
 
 func getVersion() string {
 	// TODO this should be the actual foundationdb version
-	version := os.Getenv("FDB_VERSION")
-	if version == "" {
-		version = "default_version"
-	}
-	return version
+	return getEnvOrDefault("FDB_VERSION", "default_version")
 }
 
 func getClusterName() string {
-	clusterName := os.Getenv("FDB_CLUSTER_NAME")
-	if clusterName == "" {
-		clusterName = "default_cluster_name"
-	}
-	return clusterName
+	return getEnvOrDefault("FDB_CLUSTER_NAME", "default_cluster_name")
 }
 
 func getDefaultValue(tagKey string) string {
@@ -105,4 +89,13 @@ func convertBool(value bool) float64 {
 	} else {
 		return 0
 	}
+}
+
+func getEnvOrDefault(key string, defaultValue string) string {
+	env := os.Getenv(key)
+	if env == "" {
+		return defaultValue
+	}
+
+	return env
 }

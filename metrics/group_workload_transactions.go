@@ -2,6 +2,7 @@ package metrics
 
 import (
 	"fmt"
+
 	"github.com/tigrisdata/fdb-exporter/models"
 	"github.com/uber-go/tally"
 )

@@ -14,30 +14,17 @@
 
 package metrics
 
-import (
-	"github.com/tigrisdata/fdb-exporter/models"
-	"github.com/uber-go/tally"
-)
+import "github.com/tigrisdata/fdb-exporter/models"
 
 type WorkloadBytesMetricGroup struct {
 	MetricGroup
 }
 
-func NewWorkloadBytesMetricGroup() *WorkloadBytesMetricGroup {
-	w := WorkloadBytesMetricGroup{}
-	w.scopes = make(map[string]tally.Scope)
-	return &w
+func NewWorkloadBytesMetricGroup(mInfo *MetricInfo) *WorkloadBytesMetricGroup {
+	return &WorkloadBytesMetricGroup{*NewMetricGroup("bytes", mInfo.scopes["workload"], mInfo)}
 }
 
-func (w *WorkloadBytesMetricGroup) SetStatus(status *models.FullStatus) {
-	w.status = status
-}
-
-func (w *WorkloadBytesMetricGroup) InitScopes() {
-	w.scopes["default"] = WorkloadScope.SubScope("keys")
-}
-
-func (w *WorkloadBytesMetricGroup) GetMetrics() {
-	SetIntGauge(w.scopes["default"], "read", GetBaseTags(), w.status.Cluster.Workload.Bytes.Read.Counter)
-	SetIntGauge(w.scopes["default"], "written", GetBaseTags(), w.status.Cluster.Workload.Bytes.Written.Counter)
+func (w *WorkloadBytesMetricGroup) GetMetrics(status *models.FullStatus) {
+	SetIntGauge(w.scopes["default"], "read", GetBaseTags(), status.Cluster.Workload.Bytes.Read.Counter)
+	SetIntGauge(w.scopes["default"], "written", GetBaseTags(), status.Cluster.Workload.Bytes.Written.Counter)
 }

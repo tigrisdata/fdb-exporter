@@ -18,6 +18,15 @@ import "os"
 
 const UnknownValue = "unknown"
 
+func getBaseTagKeys() []string {
+	return []string{
+		"env",
+		"service",
+		"version",
+		"cluster",
+	}
+}
+
 func GetBaseTags() map[string]string {
 	return map[string]string{
 		"env":     getEnv(),

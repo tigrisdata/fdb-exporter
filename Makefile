@@ -7,3 +7,6 @@ build:
 
 clean:
 	rm -f ./fdb-exporter
+
+fmt:
+	find . -name \*.go -not -path bin/ -exec goimports -w {} \;

@@ -16,9 +16,10 @@ package server
 
 import (
 	"fmt"
-	"github.com/tigrisdata/fdb-exporter/metrics"
 	"net/http"
 	"os"
+
+	"github.com/tigrisdata/fdb-exporter/metrics"
 )
 
 func Serve() {

@@ -1,0 +1,26 @@
+name: go-test
+on:
+  push:
+    branches:
+      - "!main"
+
+  workflow_call:
+
+  pull_request:
+    
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out code
+        uses: actions/checkout@v3
+        with:
+          submodules: true
+
+      - name: Run tests
+        run: make test
+        env:
+          TEST_PARAM: "-coverprofile=coverage.out -covermode=atomic"
+
+      - name: Upload coverage to Codecov
+        uses: codecov/codecov-action@v3

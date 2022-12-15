@@ -12,10 +12,10 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package clustermodel
+package models
 
 // Cluster top level status
-type Status struct {
+type ClusterStatus struct {
 	// TODO: add support for clients and detecting version compatibility
 	// TODO: add support for incompatible connections
 	// TODO: add layers
@@ -33,7 +33,7 @@ type Status struct {
 	LatencyProbe               LatencyProbe       `json:"latency_probe"`
 	Logs                       []Log              `json:"logs"`
 	Machines                   map[string]Machine `json:"machines"`
-	Messages                   []Message          `json:"messages"`
+	Messages                   []ClusterMessage   `json:"messages"`
 	PageCache                  PageCache          `json:"page_cache"`
 	Processes                  map[string]Process `json:"processes"`
 	ProtocolVersion            string             `json:"protocol_version"`

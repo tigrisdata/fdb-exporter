@@ -15,12 +15,48 @@
 package models
 
 import (
-	clientmodel "github.com/tigrisdata/fdb-exporter/models/client"
-	clustermodel "github.com/tigrisdata/fdb-exporter/models/cluster"
+	"encoding/json"
+	"fmt"
+	"github.com/stretchr/testify/assert"
+	"io/ioutil"
+	"os"
+	"testing"
 )
 
 // Top level fields from status json
 type FullStatus struct {
-	Client  clientmodel.Status  `json:"client"`
-	Cluster clustermodel.Status `json:"cluster"`
+	Client  ClientStatus  `json:"client"`
+	Cluster ClusterStatus `json:"cluster"`
+}
+
+const RelativeJsonFileLocation = "test/data"
+
+func GetStatusFromFile(fileName string) (*FullStatus, error) {
+	var status FullStatus
+	wd, err := os.Getwd()
+	if err != nil {
+		return nil, fmt.Errorf("failed to get working directory")
+	}
+	testFilePath := fmt.Sprintf("%s/../%s/%s", wd, RelativeJsonFileLocation, fileName)
+	f, err := os.Open(testFilePath)
+	if err != nil {
+		return nil, fmt.Errorf("failed to open test file %s", testFilePath)
+	}
+	defer f.Close()
+
+	jsonBytes, err := ioutil.ReadAll(f)
+	if err != nil {
+		return nil, fmt.Errorf("failed to read test file %s", testFilePath)
+	}
+	err = json.Unmarshal(jsonBytes, &status)
+	if err != nil {
+		return nil, fmt.Errorf("failed to unmarshel test file %s", testFilePath)
+	}
+	return &status, nil
+}
+
+func CheckJsonFile(t *testing.T, fileName string) *FullStatus {
+	status, err := GetStatusFromFile(fileName)
+	assert.Nil(t, err, "error reading status file")
+	return status
 }

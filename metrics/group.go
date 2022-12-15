@@ -20,24 +20,21 @@ import (
 )
 
 // TODO: Metric group and metric interfaces, each one will plug into these
-type MetricGroup struct {
+type metricGroup struct {
 	name        string
-	scopes      map[string]tally.Scope
 	parentScope tally.Scope
-	mInfo       *MetricInfo
+	info        *MetricInfo
+	scoped
 }
 
-func NewMetricGroup(name string, parentScope tally.Scope, mInfo *MetricInfo) *MetricGroup {
-	m := MetricGroup{name: name, parentScope: parentScope, mInfo: mInfo}
+func newMetricGroup(name string, parentScope tally.Scope, mInfo *MetricInfo) *metricGroup {
+	m := metricGroup{name: name, parentScope: parentScope, info: mInfo}
 	m.scopes = make(map[string]tally.Scope)
-	m.scopes["default"] = m.parentScope.SubScope(name)
+	// Default scope for a metric group
+	m.AddScope(parentScope, "default", name)
 	return &m
 }
 
-func (m *MetricGroup) AddScope(parentScope tally.Scope, name string) {
-	m.scopes[name] = parentScope.SubScope(name)
-}
-
-type Collectable interface {
+type collectable interface {
 	GetMetrics(status *models.FullStatus)
 }

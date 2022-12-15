@@ -12,17 +12,19 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package clustermodel
+package models
 
-type Message struct {
-	Description string  `json:"description"`
-	Issues      []Issue `json:"issues"`
-	Name        string  `json:"name"`
-}
-
-type Issue struct {
-	Addresses   []string `json:"addresses"`
-	Count       int      `json:"count"`
-	Description string   `json:"description"`
-	Name        string   `json:"name"`
+type ClientMessage struct {
+	// Possible names
+	// "inconsistent_cluster_file",
+	// "unreachable_cluster_controller",
+	// "no_cluster_controller",
+	// "status_incomplete_client",
+	// "status_incomplete_coordinators",
+	// "status_incomplete_error",
+	// "status_incomplete_timeout",
+	// "status_incomplete_cluster",
+	// "quorum_not_reachable"
+	Name        string
+	Description string
 }

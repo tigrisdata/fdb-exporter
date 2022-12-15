@@ -12,9 +12,14 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package clientmodel
+package models
 
-type DatabaseStatus struct {
-	Available bool `json:"available"`
-	Healthy   bool `json:"healthy"`
+import (
+	"github.com/stretchr/testify/assert"
+	"testing"
+)
+
+func TestClusterMessageSingleBasic(t *testing.T) {
+	status := CheckJsonFile(t, "status-single-basic.json")
+	assert.Equal(t, len(status.Cluster.Messages), 0)
 }

@@ -12,20 +12,17 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package metrics
+package models
 
-import "github.com/tigrisdata/fdb-exporter/models"
+import (
+	"github.com/stretchr/testify/assert"
+	"testing"
+)
 
-type DbStatusMetricGroup struct {
-	metricGroup
-}
-
-func NewDbStatusMetricGroup(info *MetricInfo) *DbStatusMetricGroup {
-	return &DbStatusMetricGroup{*newMetricGroup("status", info.GetScopeOrExit("client"), info)}
-}
-
-func (d *DbStatusMetricGroup) GetMetrics(status *models.FullStatus) {
-	scope := d.GetScopeOrExit("default")
-	SetBoolGauge(scope, "available", GetBaseTags(), status.Client.DatabaseStatus.Available)
-	SetBoolGauge(scope, "healthy", GetBaseTags(), status.Client.DatabaseStatus.Healthy)
+func TestConfigurationSingleBasic(t *testing.T) {
+	status := CheckJsonFile(t, "status-single-basic.json")
+	assert.Equal(t, status.Cluster.Configuration.BackupWorkerEnabled, 0)
+	assert.Equal(t, status.Cluster.Configuration.BlobGranulesEnabled, 0)
+	assert.Equal(t, status.Cluster.Configuration.RedundancyMode, "single")
+	assert.Equal(t, status.Cluster.Configuration.StorageEngine, "memory-2")
 }

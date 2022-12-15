@@ -17,14 +17,15 @@ package metrics
 import "github.com/tigrisdata/fdb-exporter/models"
 
 type DataMetricGroup struct {
-	MetricGroup
+	metricGroup
 }
 
-func NewDataMetricGroup(mInfo *MetricInfo) *DataMetricGroup {
-	return &DataMetricGroup{*NewMetricGroup("data", mInfo.scopes["cluster"], mInfo)}
+func NewDataMetricGroup(info *MetricInfo) *DataMetricGroup {
+	return &DataMetricGroup{*newMetricGroup("data", info.GetScopeOrExit("cluster"), info)}
 }
 
 func (d *DataMetricGroup) GetMetrics(status *models.FullStatus) {
+	scope := d.GetScopeOrExit("default")
 	metrics := map[string]int{
 		"average_partition_size_bytes":               status.Cluster.Data.AveragePartitionSizeBytes,
 		"least_operating_space_bytes_log_server":     status.Cluster.Data.LeastOperatingSpaceBytesLogServer,
@@ -36,6 +37,6 @@ func (d *DataMetricGroup) GetMetrics(status *models.FullStatus) {
 		"total_kv_size_bytes":                        status.Cluster.Data.TotalKvSizeBytes,
 	}
 	for name, value := range metrics {
-		SetIntGauge(d.scopes["default"], name, GetBaseTags(), value)
+		SetIntGauge(scope, name, GetBaseTags(), value)
 	}
 }

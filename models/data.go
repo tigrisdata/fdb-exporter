@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package clustermodel
+package models
 
 type Data struct {
 	AveragePartitionSizeBytes             int           `json:"average_partition_size_bytes"`

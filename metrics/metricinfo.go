@@ -31,14 +31,12 @@ import (
 )
 
 type MetricInfo struct {
-	groups   []Collectable
+	groups   []collectable
 	status   models.FullStatus
 	closer   io.Closer
-	scopes   map[string]tally.Scope
 	reporter promreporter.Reporter
+	scoped
 }
-
-var Reporter promreporter.Reporter
 
 func NewMetricInfo() MetricInfo {
 	m := MetricInfo{}
@@ -57,7 +55,7 @@ func NewMetricInfo() MetricInfo {
 	m.scopes["cluster"] = m.scopes["fdb"].SubScope("cluster")
 	m.scopes["workload"] = m.scopes["cluster"].SubScope("workload")
 
-	m.groups = []Collectable{
+	m.groups = []collectable{
 		NewCoordinatorMetricGroup(&m),
 		NewDbStatusMetricGroup(&m),
 		NewWorkloadOperationsMetricGroup(&m),

@@ -12,20 +12,13 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package metrics
+package models
 
-import "github.com/tigrisdata/fdb-exporter/models"
-
-type DbStatusMetricGroup struct {
-	metricGroup
-}
-
-func NewDbStatusMetricGroup(info *MetricInfo) *DbStatusMetricGroup {
-	return &DbStatusMetricGroup{*newMetricGroup("status", info.GetScopeOrExit("client"), info)}
-}
-
-func (d *DbStatusMetricGroup) GetMetrics(status *models.FullStatus) {
-	scope := d.GetScopeOrExit("default")
-	SetBoolGauge(scope, "available", GetBaseTags(), status.Client.DatabaseStatus.Available)
-	SetBoolGauge(scope, "healthy", GetBaseTags(), status.Client.DatabaseStatus.Healthy)
+// Client top level status
+type ClientStatus struct {
+	ClusterFile    ClusterFile     `json:"cluster_file"`
+	Coordinators   Coordinators    `json:"coordinators"`
+	DatabaseStatus DatabaseStatus  `json:"database_status"`
+	Messages       []ClientMessage `json:"messages"`
+	Timestamp      int             `json:"timestamp"`
 }

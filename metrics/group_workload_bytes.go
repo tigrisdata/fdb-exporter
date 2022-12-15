@@ -17,14 +17,15 @@ package metrics
 import "github.com/tigrisdata/fdb-exporter/models"
 
 type WorkloadBytesMetricGroup struct {
-	MetricGroup
+	metricGroup
 }
 
-func NewWorkloadBytesMetricGroup(mInfo *MetricInfo) *WorkloadBytesMetricGroup {
-	return &WorkloadBytesMetricGroup{*NewMetricGroup("bytes", mInfo.scopes["workload"], mInfo)}
+func NewWorkloadBytesMetricGroup(info *MetricInfo) *WorkloadBytesMetricGroup {
+	return &WorkloadBytesMetricGroup{*newMetricGroup("bytes", info.GetScopeOrExit("workload"), info)}
 }
 
 func (w *WorkloadBytesMetricGroup) GetMetrics(status *models.FullStatus) {
-	SetIntGauge(w.scopes["default"], "read", GetBaseTags(), status.Cluster.Workload.Bytes.Read.Counter)
-	SetIntGauge(w.scopes["default"], "written", GetBaseTags(), status.Cluster.Workload.Bytes.Written.Counter)
+	scope := w.GetScopeOrExit("default")
+	SetIntGauge(scope, "read", GetBaseTags(), status.Cluster.Workload.Bytes.Read.Counter)
+	SetIntGauge(scope, "written", GetBaseTags(), status.Cluster.Workload.Bytes.Written.Counter)
 }

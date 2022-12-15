@@ -14,18 +14,21 @@
 
 package metrics
 
-import "github.com/tigrisdata/fdb-exporter/models"
+import (
+	"github.com/tigrisdata/fdb-exporter/models"
+)
 
 type CoordinatorMetricGroup struct {
-	MetricGroup
+	metricGroup
 }
 
-func NewCoordinatorMetricGroup(mInfo *MetricInfo) *CoordinatorMetricGroup {
-	return &CoordinatorMetricGroup{*NewMetricGroup("coordinator", mInfo.scopes["client"], mInfo)}
+func NewCoordinatorMetricGroup(info *MetricInfo) *CoordinatorMetricGroup {
+	return &CoordinatorMetricGroup{*newMetricGroup("coordinator", info.GetScopeOrExit("client"), info)}
 }
 
 func (c *CoordinatorMetricGroup) GetMetrics(status *models.FullStatus) {
-	SetBoolGauge(c.scopes["default"], "quorum", GetBaseTags(), c.mInfo.status.Client.Coordinators.QuorumReachable)
+	scope := c.GetScopeOrExit("default")
+	SetBoolGauge(scope, "quorum", GetBaseTags(), status.Client.Coordinators.QuorumReachable)
 	reachableCount := 0
 	unreachableCount := 0
 	for _, coordinator := range status.Client.Coordinators.Coordinators {
@@ -35,6 +38,6 @@ func (c *CoordinatorMetricGroup) GetMetrics(status *models.FullStatus) {
 			unreachableCount += 1
 		}
 	}
-	SetIntGauge(c.scopes["default"], "reachable", GetBaseTags(), reachableCount)
-	SetIntGauge(c.scopes["default"], "unreachable", GetBaseTags(), unreachableCount)
+	SetIntGauge(scope, "reachable", GetBaseTags(), reachableCount)
+	SetIntGauge(scope, "unreachable", GetBaseTags(), unreachableCount)
 }

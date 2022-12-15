@@ -1,0 +1,637 @@
+{
+  "client" : {
+    "cluster_file" : {
+      "path" : "/usr/local/etc/foundationdb/fdb.cluster",
+      "up_to_date" : true
+    },
+    "coordinators" : {
+      "coordinators" : [
+        {
+          "address" : "127.0.0.1:4689",
+          "protocol" : "0fdb00b071010000",
+          "reachable" : true
+        }
+      ],
+      "quorum_reachable" : true
+    },
+    "database_status" : {
+      "available" : true,
+      "healthy" : true
+    },
+    "messages" : [
+    ],
+    "timestamp" : 1671045868
+  },
+  "cluster" : {
+    "active_primary_dc" : "",
+    "active_tss_count" : 0,
+    "bounce_impact" : {
+      "can_clean_bounce" : true
+    },
+    "clients" : {
+      "count" : 1,
+      "supported_versions" : [
+        {
+          "client_version" : "7.1.7",
+          "connected_clients" : [
+            {
+              "address" : "127.0.0.1:60751",
+              "log_group" : "default"
+            }
+          ],
+          "count" : 1,
+          "max_protocol_clients" : [
+            {
+              "address" : "127.0.0.1:60751",
+              "log_group" : "default"
+            }
+          ],
+          "max_protocol_count" : 1,
+          "protocol_version" : "fdb00b071010000",
+          "source_version" : "a88e049b28d8208519cba90f38522e8f54b61be7"
+        }
+      ]
+    },
+    "cluster_controller_timestamp" : 1671045868,
+    "configuration" : {
+      "backup_worker_enabled" : 0,
+      "blob_granules_enabled" : 0,
+      "coordinators_count" : 1,
+      "excluded_servers" : [
+      ],
+      "log_spill" : 2,
+      "perpetual_storage_wiggle" : 0,
+      "perpetual_storage_wiggle_locality" : "0",
+      "redundancy_mode" : "single",
+      "storage_engine" : "memory-2",
+      "storage_migration_type" : "disabled",
+      "tenant_mode" : "disabled",
+      "usable_regions" : 1
+    },
+    "connection_string" : "EklRZqTX:aCnTlwSL@127.0.0.1:4689",
+    "data" : {
+      "average_partition_size_bytes" : 20668340,
+      "least_operating_space_bytes_log_server" : 604285174979,
+      "least_operating_space_bytes_storage_server" : 854875383,
+      "moving_data" : {
+        "highest_priority" : 0,
+        "in_flight_bytes" : 0,
+        "in_queue_bytes" : 0,
+        "total_written_bytes" : 0
+      },
+      "partitions_count" : 2,
+      "state" : {
+        "healthy" : true,
+        "min_replicas_remaining" : 1,
+        "name" : "healthy"
+      },
+      "system_kv_size_bytes" : 0,
+      "team_trackers" : [
+        {
+          "in_flight_bytes" : 0,
+          "primary" : true,
+          "state" : {
+            "healthy" : true,
+            "min_replicas_remaining" : 1,
+            "name" : "healthy"
+          },
+          "unhealthy_servers" : 0
+        }
+      ],
+      "total_disk_used_bytes" : 542511104,
+      "total_kv_size_bytes" : 57120499
+    },
+    "database_available" : true,
+    "database_lock_state" : {
+      "locked" : false
+    },
+    "datacenter_lag" : {
+      "seconds" : 0,
+      "versions" : 0
+    },
+    "degraded_processes" : 0,
+    "fault_tolerance" : {
+      "max_zone_failures_without_losing_availability" : 0,
+      "max_zone_failures_without_losing_data" : 0
+    },
+    "full_replication" : true,
+    "generation" : 58,
+    "incompatible_connections" : [
+    ],
+    "latency_probe" : {
+      "batch_priority_transaction_start_seconds" : 0.00043892899999999996,
+      "commit_seconds" : 0.019735300000000001,
+      "immediate_priority_transaction_start_seconds" : 0.000156403,
+      "read_seconds" : 9.3698500000000004e-05,
+      "transaction_start_seconds" : 0.00041127199999999996
+    },
+    "layers" : {
+      "_valid" : true,
+      "backup" : {
+        "blob_recent_io" : {
+          "bytes_per_second" : 0,
+          "bytes_sent" : 0,
+          "requests_failed" : 0,
+          "requests_successful" : 0
+        },
+        "instances" : {
+          "c2b3107b9cfda98586aac7848815c303" : {
+            "blob_stats" : {
+              "recent" : {
+                "bytes_per_second" : 0,
+                "bytes_sent" : 0,
+                "requests_failed" : 0,
+                "requests_successful" : 0
+              },
+              "total" : {
+                "bytes_sent" : 0,
+                "requests_failed" : 0,
+                "requests_successful" : 0
+              }
+            },
+            "configured_workers" : 10,
+            "id" : "c2b3107b9cfda98586aac7848815c303",
+            "last_updated" : 1670230772.6817791,
+            "main_thread_cpu_seconds" : 1776.7731019999999,
+            "memory_usage" : 35788632064,
+            "process_cpu_seconds" : 1828.6578140000001,
+            "resident_size" : 16285696,
+            "version" : "7.1.7"
+          }
+        },
+        "instances_running" : 1,
+        "last_updated" : 1670230772.6817791,
+        "paused" : false,
+        "tags" : {
+        },
+        "total_workers" : 10
+      }
+    },
+    "logs" : [
+      {
+        "begin_version" : 2264599536058,
+        "current" : true,
+        "epoch" : 58,
+        "log_fault_tolerance" : 0,
+        "log_interfaces" : [
+          {
+            "address" : "127.0.0.1:4689",
+            "healthy" : true,
+            "id" : "7368af9e588efa13"
+          }
+        ],
+        "log_replication_factor" : 1,
+        "log_write_anti_quorum" : 0,
+        "possibly_losing_data" : false
+      }
+    ],
+    "machines" : {
+      "2f768c26fc0f01ce8af5402f7779b62c" : {
+        "address" : "127.0.0.1",
+        "contributing_workers" : 1,
+        "cpu" : {
+          "logical_core_utilization" : 0.042182900000000002
+        },
+        "excluded" : false,
+        "locality" : {
+          "machineid" : "2f768c26fc0f01ce8af5402f7779b62c",
+          "processid" : "dbfd37cad094516ba1ee62c6345b3469",
+          "zoneid" : "2f768c26fc0f01ce8af5402f7779b62c"
+        },
+        "machine_id" : "2f768c26fc0f01ce8af5402f7779b62c",
+        "memory" : {
+          "committed_bytes" : 61098893312,
+          "free_bytes" : 6370414592,
+          "total_bytes" : 67469307904
+        },
+        "network" : {
+          "megabits_received" : {
+            "hz" : 0.116317
+          },
+          "megabits_sent" : {
+            "hz" : 0.116317
+          },
+          "tcp_segments_retransmitted" : {
+            "hz" : 0
+          }
+        }
+      }
+    },
+    "messages" : [
+    ],
+    "page_cache" : {
+      "log_hit_rate" : 1,
+      "storage_hit_rate" : 1
+    },
+    "processes" : {
+      "dbfd37cad094516ba1ee62c6345b3469" : {
+        "address" : "127.0.0.1:4689",
+        "class_source" : "command_line",
+        "class_type" : "unset",
+        "command_line" : "/usr/local/libexec/fdbserver --cluster_file=/usr/local/etc/foundationdb/fdb.cluster --datadir=/usr/local/foundationdb/data/4689 --listen_address=public --logdir=/usr/local/foundationdb/logs --public_address=auto:4689",
+        "cpu" : {
+          "usage_cores" : 0.0277308
+        },
+        "disk" : {
+          "busy" : 0.022398300000000003,
+          "free_bytes" : 654297223168,
+          "reads" : {
+            "counter" : 19058541,
+            "hz" : 52.995899999999999,
+            "sectors" : 0
+          },
+          "total_bytes" : 1000240963584,
+          "writes" : {
+            "counter" : 42503287,
+            "hz" : 62.795099999999998,
+            "sectors" : 0
+          }
+        },
+        "excluded" : false,
+        "fault_domain" : "2f768c26fc0f01ce8af5402f7779b62c",
+        "locality" : {
+          "machineid" : "2f768c26fc0f01ce8af5402f7779b62c",
+          "processid" : "dbfd37cad094516ba1ee62c6345b3469",
+          "zoneid" : "2f768c26fc0f01ce8af5402f7779b62c"
+        },
+        "machine_id" : "2f768c26fc0f01ce8af5402f7779b62c",
+        "memory" : {
+          "available_bytes" : 8589934592,
+          "limit_bytes" : 8589934592,
+          "unused_allocated_memory" : 262144,
+          "used_bytes" : 37489426432
+        },
+        "messages" : [
+        ],
+        "network" : {
+          "connection_errors" : {
+            "hz" : 0
+          },
+          "connections_closed" : {
+            "hz" : 0
+          },
+          "connections_established" : {
+            "hz" : 0.199985
+          },
+          "current_connections" : 2,
+          "megabits_received" : {
+            "hz" : 0.043350300000000001
+          },
+          "megabits_sent" : {
+            "hz" : 0.054696600000000005
+          },
+          "tls_policy_failures" : {
+            "hz" : 0
+          }
+        },
+        "roles" : [
+          {
+            "id" : "40da69ee69f3a89b",
+            "role" : "master"
+          },
+          {
+            "id" : "3526c48e754c9999",
+            "role" : "cluster_controller"
+          },
+          {
+            "id" : "64292680c8f7b098",
+            "role" : "data_distributor"
+          },
+          {
+            "id" : "daaf66c325fe5067",
+            "role" : "ratekeeper"
+          },
+          {
+            "role" : "coordinator"
+          },
+          {
+            "commit_batching_window_size" : {
+              "count" : 24,
+              "max" : 0.00217702,
+              "mean" : 0.0021485099999999997,
+              "median" : 0.0021439200000000001,
+              "min" : 0.00211722,
+              "p25" : 0.0021381899999999999,
+              "p90" : 0.0021747300000000002,
+              "p95" : 0.0021761900000000002,
+              "p99" : 0.00217702,
+              "p99.9" : 0.00217702
+            },
+            "commit_latency_statistics" : {
+              "count" : 7,
+              "max" : 0.025518900000000001,
+              "mean" : 0.022464000000000001,
+              "median" : 0.0224941,
+              "min" : 0.0197611,
+              "p25" : 0.020555,
+              "p90" : 0.025518900000000001,
+              "p95" : 0.025518900000000001,
+              "p99" : 0.025518900000000001,
+              "p99.9" : 0.025518900000000001
+            },
+            "id" : "3ba9d1b34563925f",
+            "role" : "commit_proxy"
+          },
+          {
+            "grv_latency_statistics" : {
+              "batch" : {
+                "count" : 0,
+                "max" : 0,
+                "mean" : 0,
+                "median" : 0,
+                "min" : 0,
+                "p25" : 0,
+                "p90" : 0,
+                "p95" : 0,
+                "p99" : 0,
+                "p99.9" : 0
+              },
+              "default" : {
+                "count" : 250,
+                "max" : 0.00060606000000000006,
+                "mean" : 0.00017543299999999999,
+                "median" : 0.000149965,
+                "min" : 4.8875800000000011e-05,
+                "p25" : 0.000109911,
+                "p90" : 0.00033712400000000001,
+                "p95" : 0.00040793399999999999,
+                "p99" : 0.00049400300000000002,
+                "p99.9" : 0.00060606000000000006
+              }
+            },
+            "id" : "d105540aa5d0f03b",
+            "role" : "grv_proxy"
+          },
+          {
+            "data_version" : 2773842553556,
+            "durable_bytes" : {
+              "counter" : 22829235,
+              "hz" : 270.79300000000001,
+              "roughness" : 676.10500000000002
+            },
+            "id" : "7368af9e588efa13",
+            "input_bytes" : {
+              "counter" : 22829235,
+              "hz" : 0,
+              "roughness" : -1
+            },
+            "kvstore_available_bytes" : 654297223168,
+            "kvstore_free_bytes" : 654297223168,
+            "kvstore_total_bytes" : 1000240963584,
+            "kvstore_used_bytes" : 104882176,
+            "queue_disk_available_bytes" : 654297223168,
+            "queue_disk_free_bytes" : 654297223168,
+            "queue_disk_total_bytes" : 1000240963584,
+            "queue_disk_used_bytes" : 16855040,
+            "role" : "log"
+          },
+          {
+            "bytes_queried" : {
+              "counter" : 1521265096,
+              "hz" : 3361.9899999999998,
+              "roughness" : 1333.3800000000001
+            },
+            "data_lag" : {
+              "seconds" : 2.16744,
+              "versions" : 2167444
+            },
+            "data_version" : 2773842553556,
+            "durability_lag" : {
+              "seconds" : 5,
+              "versions" : 5000000
+            },
+            "durable_bytes" : {
+              "counter" : 138081574,
+              "hz" : 977.59699999999998,
+              "roughness" : 4887
+            },
+            "durable_version" : 2773837553556,
+            "fetched_versions" : {
+              "counter" : 509248017498,
+              "hz" : 1025890,
+              "roughness" : 2626230
+            },
+            "fetches_from_logs" : {
+              "counter" : 205357,
+              "hz" : 0.39999900000000005,
+              "roughness" : 0.023975200000000002
+            },
+            "finished_queries" : {
+              "counter" : 8821994,
+              "hz" : 21.1999,
+              "roughness" : 7.0472700000000001
+            },
+            "id" : "9525780b76c1b58e",
+            "input_bytes" : {
+              "counter" : 138081574,
+              "hz" : 0,
+              "roughness" : -1
+            },
+            "keys_queried" : {
+              "counter" : 4192507,
+              "hz" : 11.4,
+              "roughness" : 3.5246599999999999
+            },
+            "kvstore_available_bytes" : 954875366,
+            "kvstore_free_bytes" : 954875366,
+            "kvstore_inline_keys" : 0,
+            "kvstore_total_bytes" : 1073741824,
+            "kvstore_total_nodes" : 0,
+            "kvstore_total_size" : 0,
+            "kvstore_used_bytes" : 437628928,
+            "local_rate" : 100,
+            "low_priority_queries" : {
+              "counter" : 0,
+              "hz" : 0,
+              "roughness" : -1
+            },
+            "mutation_bytes" : {
+              "counter" : 16573859,
+              "hz" : 0,
+              "roughness" : -1
+            },
+            "mutations" : {
+              "counter" : 114104,
+              "hz" : 0,
+              "roughness" : -1
+            },
+            "query_queue_max" : 7,
+            "read_latency_statistics" : {
+              "count" : 1034,
+              "max" : 0.00035905800000000004,
+              "mean" : 6.5381299999999997e-05,
+              "median" : 5.6028400000000007e-05,
+              "min" : 5.0067899999999994e-06,
+              "p25" : 3.7908600000000005e-05,
+              "p90" : 0.000110865,
+              "p95" : 0.000136852,
+              "p99" : 0.00022101399999999998,
+              "p99.9" : 0.00032782600000000003
+            },
+            "role" : "storage",
+            "storage_metadata" : {
+              "created_time_datetime" : "2022-08-23 09:58:34.000 +0000",
+              "created_time_timestamp" : 1661250000
+            },
+            "stored_bytes" : 57120499,
+            "total_queries" : {
+              "counter" : 8821994,
+              "hz" : 21.1999,
+              "roughness" : 7.0466199999999999
+            }
+          },
+          {
+            "id" : "4aa625b089ae506a",
+            "role" : "resolver"
+          }
+        ],
+        "run_loop_busy" : 0.025193800000000002,
+        "uptime_seconds" : 509975,
+        "version" : "7.1.7"
+      }
+    },
+    "protocol_version" : "fdb00b071010000",
+    "qos" : {
+      "batch_performance_limited_by" : {
+        "description" : "The database is not being saturated by the workload.",
+        "name" : "workload",
+        "reason_id" : 2
+      },
+      "batch_released_transactions_per_second" : 0.0147207,
+      "batch_transactions_per_second_limit" : 294386000,
+      "limiting_data_lag_storage_server" : {
+        "seconds" : 0,
+        "versions" : 0
+      },
+      "limiting_durability_lag_storage_server" : {
+        "seconds" : 5.0356699999999996,
+        "versions" : 5035673
+      },
+      "limiting_queue_bytes_storage_server" : 0,
+      "performance_limited_by" : {
+        "description" : "The database is not being saturated by the workload.",
+        "name" : "workload",
+        "reason_id" : 6
+      },
+      "released_transactions_per_second" : 3.85887,
+      "throttled_tags" : {
+        "auto" : {
+          "busy_read" : 0,
+          "busy_write" : 0,
+          "count" : 0,
+          "recommended_only" : 0
+        },
+        "manual" : {
+          "count" : 0
+        }
+      },
+      "transactions_per_second_limit" : 137666000,
+      "worst_data_lag_storage_server" : {
+        "seconds" : 0,
+        "versions" : 0
+      },
+      "worst_durability_lag_storage_server" : {
+        "seconds" : 5.0356699999999996,
+        "versions" : 5035673
+      },
+      "worst_queue_bytes_log_server" : 2,
+      "worst_queue_bytes_storage_server" : 695
+    },
+    "recovery_state" : {
+      "active_generations" : 1,
+      "description" : "Recovery complete.",
+      "name" : "fully_recovered",
+      "seconds_since_last_recovered" : -1
+    },
+    "workload" : {
+      "bytes" : {
+        "read" : {
+          "counter" : 1521265096,
+          "hz" : 3361.9899999999998,
+          "roughness" : 1333.3800000000001
+        },
+        "written" : {
+          "counter" : 15203569,
+          "hz" : 0,
+          "roughness" : 0
+        }
+      },
+      "keys" : {
+        "read" : {
+          "counter" : 4192507,
+          "hz" : 11.4,
+          "roughness" : 3.5246599999999999
+        }
+      },
+      "operations" : {
+        "location_requests" : {
+          "counter" : 1564,
+          "hz" : 0.79995699999999992,
+          "roughness" : 2.9997800000000003
+        },
+        "low_priority_reads" : {
+          "counter" : 0,
+          "hz" : 0,
+          "roughness" : 0
+        },
+        "memory_errors" : {
+          "counter" : 0,
+          "hz" : 0,
+          "roughness" : 0
+        },
+        "read_requests" : {
+          "counter" : 8821994,
+          "hz" : 21.1999,
+          "roughness" : 7.0466199999999999
+        },
+        "reads" : {
+          "counter" : 8821994,
+          "hz" : 21.1999,
+          "roughness" : 7.0472700000000001
+        },
+        "writes" : {
+          "counter" : 114099,
+          "hz" : 0,
+          "roughness" : 0
+        }
+      },
+      "transactions" : {
+        "committed" : {
+          "counter" : 64050,
+          "hz" : 0.199989,
+          "roughness" : 0
+        },
+        "conflicted" : {
+          "counter" : 22,
+          "hz" : 0,
+          "roughness" : 0
+        },
+        "rejected_for_queued_too_long" : {
+          "counter" : 0,
+          "hz" : 0,
+          "roughness" : 0
+        },
+        "started" : {
+          "counter" : 2473210,
+          "hz" : 8.9984500000000001,
+          "roughness" : 2.2996500000000002
+        },
+        "started_batch_priority" : {
+          "counter" : 637,
+          "hz" : 0.199966,
+          "roughness" : 0
+        },
+        "started_default_priority" : {
+          "counter" : 1909130,
+          "hz" : 5.9989699999999999,
+          "roughness" : 1.20198
+        },
+        "started_immediate_priority" : {
+          "counter" : 563443,
+          "hz" : 2.7995200000000002,
+          "roughness" : 1.5168699999999999
+        }
+      }
+    }
+  }
+}

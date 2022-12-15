@@ -12,9 +12,19 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package clientmodel
+package models
 
-type ClusterFile struct {
-	Path     string `json:"path"`
-	UpToDate bool   `json:"up_to_date"`
+import (
+	"github.com/stretchr/testify/assert"
+	"testing"
+)
+
+func TestCoordinatorsSingleBasic(t *testing.T) {
+	status := CheckJsonFile(t, "status-single-basic.json")
+	assert.Equal(t, len(status.Client.Coordinators.Coordinators), 1)
+	for _, c := range status.Client.Coordinators.Coordinators {
+		assert.Equal(t, c.Address, "127.0.0.1:4689")
+		assert.Equal(t, c.Protocol, "0fdb00b071010000")
+		assert.True(t, c.Reachable)
+	}
 }

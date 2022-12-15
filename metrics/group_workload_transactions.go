@@ -20,30 +20,31 @@ import (
 )
 
 type WorkloadTransactionsMetricGroup struct {
-	MetricGroup
+	metricGroup
 }
 
-func NewWorkloadTransactionsMetricGroup(mInfo *MetricInfo) *WorkloadTransactionsMetricGroup {
-	w := WorkloadTransactionsMetricGroup{*NewMetricGroup("transactions", mInfo.scopes["workload"], mInfo)}
-	w.AddScope(mInfo.scopes["workload"], "started")
+func NewWorkloadTransactionsMetricGroup(info *MetricInfo) *WorkloadTransactionsMetricGroup {
+	parentScope := info.GetScopeOrExit("workload")
+	w := WorkloadTransactionsMetricGroup{*newMetricGroup("transactions", parentScope, info)}
+	w.AddScope(parentScope, "started", "transactions")
 	return &w
 }
 
-func (w *WorkloadTransactionsMetricGroup) getValidTagsKeys(scopeName string) []string {
-	if scopeName == "started" {
+func (w *WorkloadTransactionsMetricGroup) getValidTagsKeys(scopeKey string) []string {
+	if scopeKey == "started" {
 		return append(getBaseTagKeys(), "priority")
 	} else {
 		return getBaseTagKeys()
 	}
 }
 
-func (w *WorkloadTransactionsMetricGroup) getTags(scopeName string, priority string) map[string]string {
-	if scopeName == "default" {
-		return StandardizeTags(GetBaseTags(), w.getValidTagsKeys(scopeName))
-	} else if scopeName == "started" {
+func (w *WorkloadTransactionsMetricGroup) getTags(scopeKey string, priority string) map[string]string {
+	if scopeKey == "default" {
+		return StandardizeTags(GetBaseTags(), w.getValidTagsKeys(scopeKey))
+	} else if scopeKey == "started" {
 		tags := GetBaseTags()
 		tags["priority"] = priority
-		return StandardizeTags(tags, w.getValidTagsKeys(scopeName))
+		return StandardizeTags(tags, w.getValidTagsKeys(scopeKey))
 	} else {
 		log.Error().Msg("unknown scope")
 	}
@@ -51,17 +52,20 @@ func (w *WorkloadTransactionsMetricGroup) getTags(scopeName string, priority str
 }
 
 func (w *WorkloadTransactionsMetricGroup) GetMetrics(status *models.FullStatus) {
+	transActionsScope := w.GetScopeOrExit("default")
+	tags := w.getTags("default", "")
 	metrics := map[string]int{
 		"committed":                    status.Cluster.Workload.Transactions.Committed.Counter,
 		"conflicted":                   status.Cluster.Workload.Transactions.Conflicted.Counter,
 		"rejected_for_queued_too_long": status.Cluster.Workload.Transactions.RejectedForQueuedTooLong.Counter,
 	}
 	for name, value := range metrics {
-		SetIntGauge(w.scopes["default"], name, w.getTags("default", ""), value)
+		SetIntGauge(transActionsScope, name, tags, value)
 	}
 
 	// The total number of started transactions are started transactions with batch + default + immediate priorities
-	SetIntGauge(w.scopes["started"], "started", w.getTags("started", "batch"), status.Cluster.Workload.Transactions.StartedBatchPriority.Counter)
-	SetIntGauge(w.scopes["started"], "started", w.getTags("started", "default"), status.Cluster.Workload.Transactions.StartedDefaultPriority.Counter)
-	SetIntGauge(w.scopes["started"], "started", w.getTags("started", "immediate"), status.Cluster.Workload.Transactions.StartedImmediatePriority.Counter)
+	startedScope := w.GetScopeOrExit("started")
+	SetIntGauge(startedScope, "started", w.getTags("started", "batch"), status.Cluster.Workload.Transactions.StartedBatchPriority.Counter)
+	SetIntGauge(startedScope, "started", w.getTags("started", "default"), status.Cluster.Workload.Transactions.StartedDefaultPriority.Counter)
+	SetIntGauge(startedScope, "started", w.getTags("started", "immediate"), status.Cluster.Workload.Transactions.StartedImmediatePriority.Counter)
 }

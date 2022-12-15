@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package clustermodel
+package models
 
 type Configuration struct {
 	BackupWorkerEnabled            int              `json:"backup_worker_enabled"`
@@ -24,7 +24,7 @@ type Configuration struct {
 	LogRouters                     int              `json:"log_routers"`
 	Logs                           int              `json:"logs"`
 	PerpetualStorageWiggle         int              `json:"perpetual_storage_wiggle"`
-	PerpetualStorageWiggleLocality string           `json:"perpetual_storage_wiggle_locality""`
+	PerpetualStorageWiggleLocality string           `json:"perpetual_storage_wiggle_locality"`
 	Proxies                        int              `json:"proxies"`
 	RedundancyMode                 string           `json:"redundancy_mode"`
 	RemoteLogs                     int              `json:"remote_logs"`

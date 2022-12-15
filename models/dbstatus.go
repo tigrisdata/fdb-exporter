@@ -12,13 +12,9 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package clientmodel
+package models
 
-// Client top level status
-type Status struct {
-	ClusterFile    ClusterFile    `json:"cluster_file"`
-	Coordinators   Coordinators   `json:"coordinators"`
-	DatabaseStatus DatabaseStatus `json:"database_status"`
-	Messages       []Message      `json:"messages"`
-	Timestamp      int            `json:"timestamp"`
+type DatabaseStatus struct {
+	Available bool `json:"available"`
+	Healthy   bool `json:"healthy"`
 }

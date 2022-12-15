@@ -29,9 +29,9 @@ type MachineCpu struct {
 }
 
 type MachineLocality struct {
-	MachineId string `json:"machine_id"`
-	ProcessId string `json:"process_id"`
-	ZoneId    string `json:"zone_id"`
+	MachineId string `json:"machineid"`
+	ProcessId string `json:"processid"`
+	ZoneId    string `json:"zoneid"`
 }
 
 type MachineMemory struct {

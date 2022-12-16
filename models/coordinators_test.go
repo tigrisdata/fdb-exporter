@@ -22,9 +22,8 @@ import (
 func TestCoordinatorsSingleBasic(t *testing.T) {
 	status := CheckJsonFile(t, "status-single-basic.json")
 	assert.Equal(t, len(status.Client.Coordinators.Coordinators), 1)
-	for _, c := range status.Client.Coordinators.Coordinators {
-		assert.Equal(t, c.Address, "127.0.0.1:4689")
-		assert.Equal(t, c.Protocol, "0fdb00b071010000")
-		assert.True(t, c.Reachable)
-	}
+	coordinator := status.Client.Coordinators.Coordinators[0]
+	assert.Equal(t, coordinator.Address, "127.0.0.1:4689")
+	assert.Equal(t, coordinator.Protocol, "0fdb00b071010000")
+	assert.True(t, coordinator.Reachable)
 }

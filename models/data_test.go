@@ -21,36 +21,40 @@ import (
 
 func TestDataSingleBasic(t *testing.T) {
 	status := CheckJsonFile(t, "status-single-basic.json")
-	assert.Equal(t, status.Cluster.Data.AveragePartitionSizeBytes, 20668340)
-	assert.Equal(t, status.Cluster.Data.LeastOperatingSpaceBytesLogServer, 604285174979)
-	assert.Equal(t, status.Cluster.Data.LeastOperatingSpaceBytesStorageServer, 854875383)
-	assert.Equal(t, status.Cluster.Data.PartitionsCount, 2)
-	assert.Equal(t, status.Cluster.Data.TotalDiskUsedBytes, 542511104)
-	assert.Equal(t, status.Cluster.Data.TotalKvSizeBytes, 57120499)
+	data := status.Cluster.Data
+	assert.Equal(t, data.AveragePartitionSizeBytes, 20668340)
+	assert.Equal(t, data.LeastOperatingSpaceBytesLogServer, 604285174979)
+	assert.Equal(t, data.LeastOperatingSpaceBytesStorageServer, 854875383)
+	assert.Equal(t, data.PartitionsCount, 2)
+	assert.Equal(t, data.TotalDiskUsedBytes, 542511104)
+	assert.Equal(t, data.TotalKvSizeBytes, 57120499)
 }
 
 func TestMovingDataSingleBasic(t *testing.T) {
 	status := CheckJsonFile(t, "status-single-basic.json")
-	assert.Equal(t, status.Cluster.Data.MovingData.HighestPriority, 0)
-	assert.Equal(t, status.Cluster.Data.MovingData.InFlightBytes, 0)
-	assert.Equal(t, status.Cluster.Data.MovingData.InQueueBytes, 0)
-	assert.Equal(t, status.Cluster.Data.MovingData.TotalWrittenBytes, 0)
+	movingData := status.Cluster.Data.MovingData
+	assert.Equal(t, movingData.HighestPriority, 0)
+	assert.Equal(t, movingData.InFlightBytes, 0)
+	assert.Equal(t, movingData.InQueueBytes, 0)
+	assert.Equal(t, movingData.TotalWrittenBytes, 0)
 }
 
 func TestStateSingleBasic(t *testing.T) {
 	status := CheckJsonFile(t, "status-single-basic.json")
-	assert.Equal(t, status.Cluster.Data.State.Description, "")
-	assert.Equal(t, status.Cluster.Data.State.MinReplicasRemaining, 1)
-	assert.Equal(t, status.Cluster.Data.State.Healthy, true)
-	assert.Equal(t, status.Cluster.Data.State.Name, "healthy")
+	dataState := status.Cluster.Data.State
+	assert.Equal(t, dataState.Description, "")
+	assert.Equal(t, dataState.MinReplicasRemaining, 1)
+	assert.Equal(t, dataState.Healthy, true)
+	assert.Equal(t, dataState.Name, "healthy")
 }
 
 func TestTeamTrackersSingleBasic(t *testing.T) {
 	status := CheckJsonFile(t, "status-single-basic.json")
 	assert.Equal(t, len(status.Cluster.Data.TeamTrackers), 1)
-	assert.Equal(t, status.Cluster.Data.TeamTrackers[0].InFlightBytes, 0)
-	assert.True(t, status.Cluster.Data.TeamTrackers[0].Primary)
-	assert.True(t, status.Cluster.Data.TeamTrackers[0].State.Healthy)
-	assert.Equal(t, status.Cluster.Data.TeamTrackers[0].State.MinReplicasRemaining, 1)
-	assert.Equal(t, status.Cluster.Data.TeamTrackers[0].State.Name, "healthy")
+	teamTracker := status.Cluster.Data.TeamTrackers[0]
+	assert.Equal(t, teamTracker.InFlightBytes, 0)
+	assert.True(t, teamTracker.Primary)
+	assert.True(t, teamTracker.State.Healthy)
+	assert.Equal(t, teamTracker.State.MinReplicasRemaining, 1)
+	assert.Equal(t, teamTracker.State.Name, "healthy")
 }

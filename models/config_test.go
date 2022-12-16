@@ -21,8 +21,9 @@ import (
 
 func TestConfigurationSingleBasic(t *testing.T) {
 	status := CheckJsonFile(t, "status-single-basic.json")
-	assert.Equal(t, status.Cluster.Configuration.BackupWorkerEnabled, 0)
-	assert.Equal(t, status.Cluster.Configuration.BlobGranulesEnabled, 0)
-	assert.Equal(t, status.Cluster.Configuration.RedundancyMode, "single")
-	assert.Equal(t, status.Cluster.Configuration.StorageEngine, "memory-2")
+	config := status.Cluster.Configuration
+	assert.Equal(t, config.BackupWorkerEnabled, 0)
+	assert.Equal(t, config.BlobGranulesEnabled, 0)
+	assert.Equal(t, config.RedundancyMode, "single")
+	assert.Equal(t, config.StorageEngine, "memory-2")
 }

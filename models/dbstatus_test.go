@@ -21,6 +21,7 @@ import (
 
 func TestDbStatusSingleBasic(t *testing.T) {
 	status := CheckJsonFile(t, "status-single-basic.json")
-	assert.True(t, status.Client.DatabaseStatus.Available)
-	assert.True(t, status.Client.DatabaseStatus.Healthy)
+	databaseStatus := status.Client.DatabaseStatus
+	assert.True(t, databaseStatus.Available)
+	assert.True(t, databaseStatus.Healthy)
 }

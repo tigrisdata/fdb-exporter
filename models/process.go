@@ -36,30 +36,24 @@ type ProcessCpu struct {
 }
 
 type ProcessDisk struct {
-	Busy       float64           `json:"busy"`
-	FreeBytes  int               `json:"free_bytes"`
-	Reads      ProcessDiskReads  `json:"reads"`
-	TotalBytes int               `json:"total_bytes"`
-	Writes     ProcessDiskWrites `json:"writes"`
+	Busy       float64            `json:"busy"`
+	FreeBytes  int                `json:"free_bytes"`
+	Reads      ProcessDiskCounter `json:"reads"`
+	TotalBytes int                `json:"total_bytes"`
+	Writes     ProcessDiskCounter `json:"writes"`
 }
 
-type ProcessDiskReads struct {
-	Counter int     `json:"counter"`
-	Hz      float64 `json:"hz"`
-	Sectors int     `json:"sectors"`
-}
-
-type ProcessDiskWrites struct {
+type ProcessDiskCounter struct {
 	Counter int     `json:"counter"`
 	Hz      float64 `json:"hz"`
 	Sectors int     `json:"sectors"`
 }
 
 type ProcessLocality struct {
-	InstanceId string `json:"instance_id"`
-	MachineId  string `json:"machine_id"`
-	ProcessId  string `json:"process_id"`
-	ZoneId     string `json:"zone_id"`
+	InstanceId string `json:"instanceid"`
+	MachineId  string `json:"machineid"`
+	ProcessId  string `json:"processid"`
+	ZoneId     string `json:"zoneid"`
 }
 
 type ProcessMemory struct {

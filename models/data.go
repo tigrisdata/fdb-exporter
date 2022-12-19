@@ -18,9 +18,9 @@ type Data struct {
 	AveragePartitionSizeBytes             int           `json:"average_partition_size_bytes"`
 	LeastOperatingSpaceBytesLogServer     int           `json:"least_operating_space_bytes_log_server"`
 	LeastOperatingSpaceBytesStorageServer int           `json:"least_operating_space_bytes_storage_server"`
-	MovingData                            MovingData    `json:"moving_data"`
+	MovingData                            *MovingData   `json:"moving_data"`
 	PartitionsCount                       int           `json:"partitions_count"`
-	State                                 State         `json:"state"`
+	State                                 *State        `json:"state"`
 	SystemKvSizeBytes                     int           `json:"system_kv_size_bytes"`
 	TeamTrackers                          []TeamTracker `json:"team_trackers"`
 	TotalDiskUsedBytes                    int           `json:"total_disk_used_bytes"`
@@ -42,8 +42,8 @@ type State struct {
 }
 
 type TeamTracker struct {
-	InFlightBytes    int   `json:"in_flight_bytes"`
-	Primary          bool  `json:"primary"`
-	State            State `json:"state"`
-	UnhealthyServers int   `json:"unhealthy_servers"`
+	InFlightBytes    int    `json:"in_flight_bytes"`
+	Primary          bool   `json:"primary"`
+	State            *State `json:"state"`
+	UnhealthyServers int    `json:"unhealthy_servers"`
 }

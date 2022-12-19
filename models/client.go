@@ -16,9 +16,9 @@ package models
 
 // Client top level status
 type ClientStatus struct {
-	ClusterFile    ClusterFile     `json:"cluster_file"`
-	Coordinators   Coordinators    `json:"coordinators"`
-	DatabaseStatus DatabaseStatus  `json:"database_status"`
+	ClusterFile    *ClusterFile    `json:"cluster_file"`
+	Coordinators   *Coordinators   `json:"coordinators"`
+	DatabaseStatus *DatabaseStatus `json:"database_status"`
 	Messages       []ClientMessage `json:"messages"`
 	Timestamp      int             `json:"timestamp"`
 }

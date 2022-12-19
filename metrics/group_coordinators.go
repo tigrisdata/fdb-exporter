@@ -15,6 +15,7 @@
 package metrics
 
 import (
+	"github.com/rs/zerolog/log"
 	"github.com/tigrisdata/fdb-exporter/models"
 )
 
@@ -28,6 +29,10 @@ func NewCoordinatorMetricGroup(info *MetricInfo) *CoordinatorMetricGroup {
 
 func (c *CoordinatorMetricGroup) GetMetrics(status *models.FullStatus) {
 	scope := c.GetScopeOrExit("default")
+	if status == nil || status.Client == nil || status.Client.Coordinators == nil {
+		log.Error().Msg("failed to get coordinators metric group")
+		return
+	}
 	SetBoolGauge(scope, "quorum", GetBaseTags(), status.Client.Coordinators.QuorumReachable)
 	reachableCount := 0
 	unreachableCount := 0

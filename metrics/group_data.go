@@ -14,7 +14,10 @@
 
 package metrics
 
-import "github.com/tigrisdata/fdb-exporter/models"
+import (
+	"github.com/rs/zerolog/log"
+	"github.com/tigrisdata/fdb-exporter/models"
+)
 
 type DataMetricGroup struct {
 	metricGroup
@@ -26,6 +29,10 @@ func NewDataMetricGroup(info *MetricInfo) *DataMetricGroup {
 
 func (d *DataMetricGroup) GetMetrics(status *models.FullStatus) {
 	scope := d.GetScopeOrExit("default")
+	if status == nil || status.Cluster == nil || status.Cluster.Data == nil || status.Cluster.Data.MovingData == nil {
+		log.Error().Msg("failed to get data metric group")
+		return
+	}
 	metrics := map[string]int{
 		"average_partition_size_bytes":               status.Cluster.Data.AveragePartitionSizeBytes,
 		"least_operating_space_bytes_log_server":     status.Cluster.Data.LeastOperatingSpaceBytesLogServer,

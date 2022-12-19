@@ -14,7 +14,10 @@
 
 package metrics
 
-import "github.com/tigrisdata/fdb-exporter/models"
+import (
+	"github.com/rs/zerolog/log"
+	"github.com/tigrisdata/fdb-exporter/models"
+)
 
 type DbStatusMetricGroup struct {
 	metricGroup
@@ -26,6 +29,10 @@ func NewDbStatusMetricGroup(info *MetricInfo) *DbStatusMetricGroup {
 
 func (d *DbStatusMetricGroup) GetMetrics(status *models.FullStatus) {
 	scope := d.GetScopeOrExit("default")
+	if status == nil || status.Client == nil || status.Client.DatabaseStatus == nil {
+		log.Error().Msg("failed to get database status")
+		return
+	}
 	SetBoolGauge(scope, "available", GetBaseTags(), status.Client.DatabaseStatus.Available)
 	SetBoolGauge(scope, "healthy", GetBaseTags(), status.Client.DatabaseStatus.Healthy)
 }

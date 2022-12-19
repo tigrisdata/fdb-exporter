@@ -16,9 +16,11 @@ package db
 
 import (
 	"encoding/json"
+	"fmt"
+	"os"
+
 	"github.com/rs/zerolog/log"
 	ulog "github.com/tigrisdata/fdb-exporter/util/log"
-	"os"
 
 	"github.com/apple/foundationdb/bindings/go/src/fdb"
 	"github.com/tigrisdata/fdb-exporter/models"
@@ -39,23 +41,23 @@ func getFdb() fdb.Database {
 	return db
 }
 
-func GetStatus() models.FullStatus {
+func GetStatus() (*models.FullStatus, error) {
 	conn := getFdb()
-	var status models.FullStatus
+	var status *models.FullStatus
 	statusKey := append([]byte{255, 255}, []byte("/status/json")...)
 	statusJson, err := conn.ReadTransact(func(t fdb.ReadTransaction) (interface{}, error) {
 		return t.Get(fdb.Key(statusKey)).Get()
 	})
 	if err != nil {
-		log.Error().Msg("failed to get status")
-		os.Exit(1)
+		ulog.E(err)
+		return nil, fmt.Errorf("failed to get status")
 	}
 
-	err = json.Unmarshal(statusJson.([]byte), &status)
+	err = json.Unmarshal(statusJson.([]byte), status)
 	if err != nil {
 		ulog.E(err)
-		os.Exit(1)
+		return nil, fmt.Errorf("failed to unmarshal status")
 	}
 
-	return status
+	return status, nil
 }

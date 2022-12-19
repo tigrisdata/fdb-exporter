@@ -20,26 +20,26 @@ type ClusterStatus struct {
 	// TODO: add support for incompatible connections
 	// TODO: add layers
 	ClusterControllerTimestamp int                `json:"cluster_controller_timestamp"`
-	Configuration              Configuration      `json:"configuration"`
+	Configuration              *Configuration     `json:"configuration"`
 	ConnectionString           string             `json:"connection_string"`
-	Data                       Data               `json:"data"`
+	Data                       *Data              `json:"data"`
 	DatabaseAvailable          bool               `json:"database_available"`
-	DatabaseLockState          LockState          `json:"database_lock_state"`
+	DatabaseLockState          *LockState         `json:"database_lock_state"`
 	DatacenterLag              Lag                `json:"datacenter_lag"`
 	DegradedProcesses          int                `json:"degraded_processes"`
-	FaultTolerance             FaultTolerance     `json:"fault_tolerance"`
+	FaultTolerance             *FaultTolerance    `json:"fault_tolerance"`
 	FullReplication            bool               `json:"full_replication"`
 	Generation                 int                `json:"generation"`
-	LatencyProbe               LatencyProbe       `json:"latency_probe"`
+	LatencyProbe               *LatencyProbe      `json:"latency_probe"`
 	Logs                       []Log              `json:"logs"`
 	Machines                   map[string]Machine `json:"machines"`
 	Messages                   []ClusterMessage   `json:"messages"`
-	PageCache                  PageCache          `json:"page_cache"`
+	PageCache                  *PageCache         `json:"page_cache"`
 	Processes                  map[string]Process `json:"processes"`
 	ProtocolVersion            string             `json:"protocol_version"`
-	Qos                        Qos                `json:"qos"`
-	RecoveryState              RecoveryState      `json:"recovery_state"`
-	Workload                   Workload           `json:"workload"`
+	Qos                        *Qos               `json:"qos"`
+	RecoveryState              *RecoveryState     `json:"recovery_state"`
+	Workload                   *Workload          `json:"workload"`
 }
 
 type LockState struct {

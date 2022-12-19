@@ -20,13 +20,8 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
-func TestLogSingleBasic(t *testing.T) {
-	status := CheckJsonFile(t, "status-single-basic.json")
-	clusterLog := status.Cluster.Logs[0]
-	assert.Equal(t, clusterLog.BeginVersion, 2264599536058)
-	assert.True(t, clusterLog.Current)
-	assert.Equal(t, clusterLog.Epoch, 58)
-	assert.Equal(t, clusterLog.LogFaultTolerance, 0)
-	assert.Equal(t, clusterLog.LogReplicationFactor, 1)
-	assert.Equal(t, clusterLog.PossiblyLosingData, false)
+func CheckJsonFile(t *testing.T, fileName string) *FullStatus {
+	status, err := GetStatusFromFile(fileName)
+	assert.Nil(t, err, "error reading status file")
+	return status
 }

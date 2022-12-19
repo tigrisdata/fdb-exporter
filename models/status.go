@@ -17,16 +17,14 @@ package models
 import (
 	"encoding/json"
 	"fmt"
-	"github.com/stretchr/testify/assert"
 	"io/ioutil"
 	"os"
-	"testing"
 )
 
 // Top level fields from status json
 type FullStatus struct {
-	Client  ClientStatus  `json:"client"`
-	Cluster ClusterStatus `json:"cluster"`
+	Client  *ClientStatus  `json:"client"`
+	Cluster *ClusterStatus `json:"cluster"`
 }
 
 const RelativeJsonFileLocation = "test/data"
@@ -53,10 +51,4 @@ func GetStatusFromFile(fileName string) (*FullStatus, error) {
 		return nil, fmt.Errorf("failed to unmarshel test file %s", testFilePath)
 	}
 	return &status, nil
-}
-
-func CheckJsonFile(t *testing.T, fileName string) *FullStatus {
-	status, err := GetStatusFromFile(fileName)
-	assert.Nil(t, err, "error reading status file")
-	return status
 }

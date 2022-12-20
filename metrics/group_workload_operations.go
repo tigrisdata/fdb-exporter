@@ -14,7 +14,10 @@
 
 package metrics
 
-import "github.com/tigrisdata/fdb-exporter/models"
+import (
+	"github.com/rs/zerolog/log"
+	"github.com/tigrisdata/fdb-exporter/models"
+)
 
 type WorkloadOperationsMetricGroup struct {
 	metricGroup
@@ -26,6 +29,11 @@ func NewWorkloadOperationsMetricGroup(info *MetricInfo) *WorkloadOperationsMetri
 
 func (w *WorkloadOperationsMetricGroup) GetMetrics(status *models.FullStatus) {
 	scope := w.GetScopeOrExit("default")
+	// TODO: check these individually
+	if status == nil || status.Cluster == nil || status.Cluster.Workload == nil || status.Cluster.Workload.Operations == nil {
+		log.Error().Msg("failed to get workload operations metric group")
+		return
+	}
 	metrics := map[string]int{
 		"reads":              status.Cluster.Workload.Operations.Reads.Counter,
 		"writes":             status.Cluster.Workload.Operations.Writes.Counter,

@@ -53,6 +53,10 @@ func (w *WorkloadTransactionsMetricGroup) getTags(scopeKey string, priority stri
 
 func (w *WorkloadTransactionsMetricGroup) GetMetrics(status *models.FullStatus) {
 	transActionsScope := w.GetScopeOrExit("default")
+	if status == nil || status.Cluster == nil || status.Cluster.Workload == nil || status.Cluster.Workload.Transactions == nil {
+		log.Error().Msg("failed to get workload transactions metric group")
+		return
+	}
 	tags := w.getTags("default", "")
 	metrics := map[string]int{
 		"committed":                    status.Cluster.Workload.Transactions.Committed.Counter,

@@ -16,10 +16,11 @@ package metrics
 
 import (
 	"fmt"
+	"os"
+
 	"github.com/rs/zerolog/log"
 	ulog "github.com/tigrisdata/fdb-exporter/util/log"
 	"github.com/uber-go/tally"
-	"os"
 )
 
 // To include in other structs. Initialization of the map should be done on the included struct.

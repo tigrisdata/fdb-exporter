@@ -35,6 +35,6 @@ func newMetricGroup(name string, parentScope tally.Scope, mInfo *MetricInfo) *me
 	return &m
 }
 
-type collectable interface {
+type Collectable interface {
 	GetMetrics(status *models.FullStatus)
 }

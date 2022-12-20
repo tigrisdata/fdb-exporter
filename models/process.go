@@ -19,15 +19,15 @@ type Process struct {
 	ClassSource string           `json:"class_source"`
 	ClassType   string           `json:"class_type"`
 	CommandLine string           `json:"command_line"`
-	Cpu         ProcessCpu       `json:"cpu"`
-	Disk        ProcessDisk      `json:"disk"`
+	Cpu         *ProcessCpu      `json:"cpu"`
+	Disk        *ProcessDisk     `json:"disk"`
 	Excluded    bool             `json:"excluded"`
 	FaultDomain string           `json:"fault_domain"`
-	Locality    ProcessLocality  `json:"locality"`
+	Locality    *ProcessLocality `json:"locality"`
 	MachineId   string           `json:"machine_id"`
-	Memory      ProcessMemory    `json:"memory"`
+	Memory      *ProcessMemory   `json:"memory"`
 	Messages    []ProcessMessage `json:"messages"`
-	Network     ProcessNetwork   `json:"network"`
+	Network     *ProcessNetwork  `json:"network"`
 	Roles       []ProcessRole    `json:"roles"`
 }
 
@@ -36,11 +36,11 @@ type ProcessCpu struct {
 }
 
 type ProcessDisk struct {
-	Busy       float64            `json:"busy"`
-	FreeBytes  int                `json:"free_bytes"`
-	Reads      ProcessDiskCounter `json:"reads"`
-	TotalBytes int                `json:"total_bytes"`
-	Writes     ProcessDiskCounter `json:"writes"`
+	Busy       float64             `json:"busy"`
+	FreeBytes  int                 `json:"free_bytes"`
+	Reads      *ProcessDiskCounter `json:"reads"`
+	TotalBytes int                 `json:"total_bytes"`
+	Writes     *ProcessDiskCounter `json:"writes"`
 }
 
 type ProcessDiskCounter struct {
@@ -72,13 +72,13 @@ type ProcessMessage struct {
 }
 
 type ProcessNetwork struct {
-	ConnectionErrors       Hz  `json:"connection_errors"`
-	ConnectionsClosed      Hz  `json:"connections_closed"`
-	ConnectionsEstablished Hz  `json:"connections_established"`
+	ConnectionErrors       *Hz `json:"connection_errors"`
+	ConnectionsClosed      *Hz `json:"connections_closed"`
+	ConnectionsEstablished *Hz `json:"connections_established"`
 	CurrentConnections     int `json:"current_connections"`
-	MegabitsReceived       Hz  `json:"megabits_received"`
-	MegabitsSent           Hz  `json:"megabits_sent"`
-	TlsPolicyFailures      Hz  `json:"tls_policy_failures"`
+	MegabitsReceived       *Hz `json:"megabits_received"`
+	MegabitsSent           *Hz `json:"megabits_sent"`
+	TlsPolicyFailures      *Hz `json:"tls_policy_failures"`
 }
 
 type ProcessRole struct {

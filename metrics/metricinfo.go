@@ -15,14 +15,16 @@
 package metrics
 
 import (
-	"context"
+	"encoding/json"
 	"fmt"
-	"github.com/rs/zerolog/log"
-	"github.com/tigrisdata/fdb-exporter/db"
 	"io"
+	"io/ioutil"
 	"net/http"
 	"os"
 	"time"
+
+	"github.com/rs/zerolog/log"
+	"github.com/tigrisdata/fdb-exporter/db"
 
 	"github.com/tigrisdata/fdb-exporter/models"
 	ulog "github.com/tigrisdata/fdb-exporter/util/log"
@@ -30,12 +32,20 @@ import (
 	promreporter "github.com/uber-go/tally/prometheus"
 )
 
+const RelativeJsonFileLocation = "test/data"
+
 type MetricInfo struct {
-	groups   []collectable
-	status   models.FullStatus
+	groups   []Collectable
+	status   *models.FullStatus
 	closer   io.Closer
 	reporter promreporter.Reporter
 	scoped
+}
+
+type fetchedMetric struct {
+	metricKey   string
+	metricValue string
+	tags        string
 }
 
 func NewMetricInfo() MetricInfo {
@@ -55,7 +65,7 @@ func NewMetricInfo() MetricInfo {
 	m.scopes["cluster"] = m.scopes["fdb"].SubScope("cluster")
 	m.scopes["workload"] = m.scopes["cluster"].SubScope("workload")
 
-	m.groups = []collectable{
+	m.groups = []Collectable{
 		NewCoordinatorMetricGroup(&m),
 		NewDbStatusMetricGroup(&m),
 		NewWorkloadOperationsMetricGroup(&m),
@@ -72,27 +82,55 @@ func (m *MetricInfo) Collect() {
 	// TODO make this configurable
 	interval := 10 * time.Second
 	ticker := time.NewTicker(interval)
-	// First collection should happen immediately, the rest is timer based
-	ctx, cancel := context.WithTimeout(context.Background(), interval)
-	defer cancel()
-	ulog.E(m.collectOnce(ctx))
+	ulog.E(m.collectOnce())
 	for range ticker.C {
-		ulog.E(m.collectOnce(ctx))
+		ulog.E(m.collectOnce())
 	}
 	defer ticker.Stop()
 }
 
-func (m *MetricInfo) collectOnce(ctx context.Context) error {
-	m.status = db.GetStatus()
+func (m *MetricInfo) collectOnce() error {
+	var err error
+	m.status, err = db.GetStatus()
+	if err != nil {
+		return fmt.Errorf("failed to get status")
+	}
 
 	if len(m.groups) == 0 {
 		ulog.E(fmt.Errorf("no metric groups detected"))
 	}
 
 	for _, group := range m.groups {
-		group.GetMetrics(&m.status)
+		group.GetMetrics(m.status)
 	}
 	log.Debug().Msg("collected once")
+	return nil
+}
+
+func (m *MetricInfo) collectOnceFromFile(fileName string) error {
+	// Used in testing
+	wd, err := os.Getwd()
+	if err != nil {
+		ulog.E(err)
+	}
+	testFilePath := fmt.Sprintf("%s/../%s/%s", wd, RelativeJsonFileLocation, fileName)
+	f, err := os.Open(testFilePath)
+	if err != nil {
+		ulog.E(err)
+	}
+	defer f.Close()
+	jsonBytes, err := ioutil.ReadAll(f)
+	if err != nil {
+		ulog.E(err)
+	}
+	err = json.Unmarshal(jsonBytes, &m.status)
+	if err != nil {
+		ulog.E(err)
+	}
+
+	for _, group := range m.groups {
+		group.GetMetrics(m.status)
+	}
 	return nil
 }
 

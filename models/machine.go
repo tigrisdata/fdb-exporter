@@ -15,13 +15,13 @@
 package models
 
 type Machine struct {
-	Address             string          `json:"address"`
-	ContributingWorkers int             `json:"contributing_workers"`
-	Cpu                 MachineCpu      `json:"cpu"`
-	Excluded            bool            `json:"excluded"`
-	Locality            MachineLocality `json:"locality"`
-	Memory              MachineMemory   `json:"memory"`
-	Network             MachineNetwork  `json:"network"`
+	Address             string           `json:"address"`
+	ContributingWorkers int              `json:"contributing_workers"`
+	Cpu                 *MachineCpu      `json:"cpu"`
+	Excluded            bool             `json:"excluded"`
+	Locality            *MachineLocality `json:"locality"`
+	Memory              *MachineMemory   `json:"memory"`
+	Network             *MachineNetwork  `json:"network"`
 }
 
 type MachineCpu struct {
@@ -41,7 +41,7 @@ type MachineMemory struct {
 }
 
 type MachineNetwork struct {
-	MegabitsReceived         Hz `json:"megabits_received"`
-	MegabitsSent             Hz `json:"megabits_sent"`
-	TcpSegmentsRetransmitted Hz `json:"tcp_segments_retransmitted"`
+	MegabitsReceived         *Hz `json:"megabits_received"`
+	MegabitsSent             *Hz `json:"megabits_sent"`
+	TcpSegmentsRetransmitted *Hz `json:"tcp_segments_retransmitted"`
 }

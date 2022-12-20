@@ -19,15 +19,17 @@ import (
 	"github.com/uber-go/tally"
 )
 
-// TODO: Metric group and metric interfaces, each one will plug into these
+// Metrics for a single subsection of status json output
+// Metrics in a group are collected and processed at the same time, usually they are correlated
 type metricGroup struct {
 	name        string
 	parentScope tally.Scope
-	info        *MetricInfo
+	// Pointer to the singleton MetricReporter that is created in main
+	info *MetricReporter
 	scoped
 }
 
-func newMetricGroup(name string, parentScope tally.Scope, mInfo *MetricInfo) *metricGroup {
+func newMetricGroup(name string, parentScope tally.Scope, mInfo *MetricReporter) *metricGroup {
 	m := metricGroup{name: name, parentScope: parentScope, info: mInfo}
 	m.scopes = make(map[string]tally.Scope)
 	// Default scope for a metric group
@@ -35,6 +37,7 @@ func newMetricGroup(name string, parentScope tally.Scope, mInfo *MetricInfo) *me
 	return &m
 }
 
+// Each group that collects metrics needs to implement the Collectable interface
 type Collectable interface {
 	GetMetrics(status *models.FullStatus)
 }

@@ -23,15 +23,15 @@ type WorkloadKeysMetricGroup struct {
 	metricGroup
 }
 
-func NewWorkloadKeysMetricGroup(info *MetricInfo) *WorkloadKeysMetricGroup {
+func NewWorkloadKeysMetricGroup(info *MetricReporter) *WorkloadKeysMetricGroup {
 	return &WorkloadKeysMetricGroup{*newMetricGroup("keys", info.GetScopeOrExit("workload"), info)}
 }
 
 func (w *WorkloadKeysMetricGroup) GetMetrics(status *models.FullStatus) {
 	scope := w.GetScopeOrExit("default")
-	if status == nil || status.Cluster == nil || status.Cluster.Workload == nil || status.Cluster.Workload.Keys == nil || &status.Cluster.Workload.Keys.Read == nil {
+	if !isValidWorkload(status) || status.Cluster.Workload.Keys == nil || &status.Cluster.Workload.Keys.Read == nil {
 		log.Error().Msg("failed to get workload keys metric group")
 		return
 	}
-	SetIntGauge(scope, "read", GetBaseTags(), status.Cluster.Workload.Keys.Read.Counter)
+	SetGauge(scope, "read", GetBaseTags(), status.Cluster.Workload.Keys.Read.Counter)
 }

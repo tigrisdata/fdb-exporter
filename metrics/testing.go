@@ -26,15 +26,17 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
+var testMetricReporter *MetricReporter
+
 func getMetricsFromTestFile(t *testing.T, fileName string) []fetchedMetric {
 	var res []fetchedMetric
-	m := NewMetricInfo()
-	ts := httptest.NewServer(m.reporter.HTTPHandler())
+	ts := httptest.NewServer(testMetricReporter.reporter.HTTPHandler())
 	defer ts.Close()
-	err := m.collectOnceFromFile(fileName)
+	err := testMetricReporter.collectOnceFromFile(fileName)
 	if err != nil {
 		assert.Nil(t, err, "error collecting metrics from file %s", fileName)
 	}
+	testMetricReporter.reporter.Flush()
 	resGet, err := http.Get(ts.URL)
 	if err != nil {
 		assert.Nil(t, err, "error getting metrics")
@@ -60,7 +62,7 @@ func parseMetricLine(t *testing.T, line string) fetchedMetric {
 	assert.Nil(t, err, "error parsing metric line with regexp")
 	match := fullMetricRe.FindStringSubmatch(line)
 	if len(match) == 4 {
-		return fetchedMetric{metricKey: match[1], tags: match[2], metricValue: match[3]}
+		return fetchedMetric{key: match[1], tags: match[2], value: match[3]}
 	} else {
 		return fetchedMetric{}
 	}
@@ -70,7 +72,7 @@ func checkMetrics(t *testing.T, metrics []fetchedMetric, expectedMetrics []strin
 	for _, expectedMetric := range expectedMetrics {
 		foundExpectedMetric := false
 		for _, metric := range metrics {
-			if metric.metricKey == expectedMetric && metric.metricValue != "" {
+			if metric.key == expectedMetric && metric.value != "" {
 				foundExpectedMetric = true
 			}
 		}
@@ -78,5 +80,28 @@ func checkMetrics(t *testing.T, metrics []fetchedMetric, expectedMetrics []strin
 			assert.Falsef(t, true, "did not find %s in the metrics", expectedMetric)
 		}
 		assert.True(t, foundExpectedMetric)
+	}
+}
+
+func checkTagsForMetric(t *testing.T, metrics []fetchedMetric, metricToCheck string, tagsToCheck []string) {
+	metricFound := false
+	for _, metric := range metrics {
+		if metric.key == metricToCheck {
+			metricFound = true
+			for _, tagToCheck := range tagsToCheck {
+				if !strings.Contains(metric.tags, tagToCheck) {
+					assert.Fail(t, "metric key %s tags %s value %s, did not contain tag %s", metric.key, metric.tags, metric.value, tagToCheck)
+				}
+			}
+		}
+	}
+	if !metricFound {
+		assert.Fail(t, "metric %s not found", metricToCheck)
+	}
+}
+
+func initTestMetricReporter() {
+	if testMetricReporter == nil {
+		testMetricReporter = NewMetricReporter()
 	}
 }

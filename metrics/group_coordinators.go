@@ -23,17 +23,17 @@ type CoordinatorMetricGroup struct {
 	metricGroup
 }
 
-func NewCoordinatorMetricGroup(info *MetricInfo) *CoordinatorMetricGroup {
+func NewCoordinatorMetricGroup(info *MetricReporter) *CoordinatorMetricGroup {
 	return &CoordinatorMetricGroup{*newMetricGroup("coordinator", info.GetScopeOrExit("client"), info)}
 }
 
 func (c *CoordinatorMetricGroup) GetMetrics(status *models.FullStatus) {
 	scope := c.GetScopeOrExit("default")
-	if status == nil || status.Client == nil || status.Client.Coordinators == nil {
+	if !isValidClient(status) || status.Client.Coordinators == nil {
 		log.Error().Msg("failed to get coordinators metric group")
 		return
 	}
-	SetBoolGauge(scope, "quorum", GetBaseTags(), status.Client.Coordinators.QuorumReachable)
+	SetGauge(scope, "quorum", GetBaseTags(), status.Client.Coordinators.QuorumReachable)
 	reachableCount := 0
 	unreachableCount := 0
 	for _, coordinator := range status.Client.Coordinators.Coordinators {
@@ -43,6 +43,6 @@ func (c *CoordinatorMetricGroup) GetMetrics(status *models.FullStatus) {
 			unreachableCount += 1
 		}
 	}
-	SetIntGauge(scope, "reachable", GetBaseTags(), reachableCount)
-	SetIntGauge(scope, "unreachable", GetBaseTags(), unreachableCount)
+	SetGauge(scope, "reachable", GetBaseTags(), reachableCount)
+	SetGauge(scope, "unreachable", GetBaseTags(), unreachableCount)
 }

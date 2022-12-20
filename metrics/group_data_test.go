@@ -18,7 +18,8 @@ import (
 	"testing"
 )
 
-func TestNewDataMetricGroup(t *testing.T) {
+func TestDataMetricGroupSingleBasic(t *testing.T) {
+	initTestMetricReporter()
 	metrics := getMetricsFromTestFile(t, "status-single-basic.json")
 	// True represents a non-zero value, false represent zero value
 	expected := []string{
@@ -30,6 +31,17 @@ func TestNewDataMetricGroup(t *testing.T) {
 		"fdb_cluster_data_moving_data_total_written_types",
 		"fdb_cluster_data_total_disk_used_bytes",
 		"fdb_cluster_data_total_kv_size_bytes",
+	}
+	checkMetrics(t, metrics, expected)
+}
+
+func TestDataMetricGroupMovingData(t *testing.T) {
+	initTestMetricReporter()
+	metrics := getMetricsFromTestFile(t, "moving-data.json")
+	expected := []string{
+		"fdb_cluster_data_moving_data_in_flight_bytes",
+		"fdb_cluster_data_moving_data_in_queue_bytes",
+		"fdb_cluster_data_moving_data_total_written_types",
 	}
 	checkMetrics(t, metrics, expected)
 }

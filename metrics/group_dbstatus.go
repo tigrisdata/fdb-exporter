@@ -23,16 +23,16 @@ type DbStatusMetricGroup struct {
 	metricGroup
 }
 
-func NewDbStatusMetricGroup(info *MetricInfo) *DbStatusMetricGroup {
+func NewDbStatusMetricGroup(info *MetricReporter) *DbStatusMetricGroup {
 	return &DbStatusMetricGroup{*newMetricGroup("status", info.GetScopeOrExit("client"), info)}
 }
 
 func (d *DbStatusMetricGroup) GetMetrics(status *models.FullStatus) {
 	scope := d.GetScopeOrExit("default")
-	if status == nil || status.Client == nil || status.Client.DatabaseStatus == nil {
+	if !isValidClient(status) || status.Client.DatabaseStatus == nil {
 		log.Error().Msg("failed to get database status")
 		return
 	}
-	SetBoolGauge(scope, "available", GetBaseTags(), status.Client.DatabaseStatus.Available)
-	SetBoolGauge(scope, "healthy", GetBaseTags(), status.Client.DatabaseStatus.Healthy)
+	SetGauge(scope, "available", GetBaseTags(), status.Client.DatabaseStatus.Available)
+	SetGauge(scope, "healthy", GetBaseTags(), status.Client.DatabaseStatus.Healthy)
 }

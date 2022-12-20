@@ -34,7 +34,11 @@ import (
 
 const RelativeJsonFileLocation = "test/data"
 
-type MetricInfo struct {
+// High level type that can report all the metrics.
+// Reponsible for:
+// * getting the status json output periodically
+// * call the GetMetrics() method of each group, which will set up the metrics in tally
+type MetricReporter struct {
 	groups   []Collectable
 	status   *models.FullStatus
 	closer   io.Closer
@@ -42,14 +46,15 @@ type MetricInfo struct {
 	scoped
 }
 
+// Used in integration testing when the metrics are fetched from the server
 type fetchedMetric struct {
-	metricKey   string
-	metricValue string
-	tags        string
+	key   string
+	value string
+	tags  string
 }
 
-func NewMetricInfo() MetricInfo {
-	m := MetricInfo{}
+func NewMetricReporter() *MetricReporter {
+	m := MetricReporter{}
 	m.scopes = make(map[string]tally.Scope)
 
 	m.reporter = promreporter.NewReporter(promreporter.Options{})
@@ -59,12 +64,12 @@ func NewMetricInfo() MetricInfo {
 		Separator:      promreporter.DefaultSeparator,
 	}, 1*time.Second)
 
-	// TODO check if the scopes actually exist
-	m.scopes["fdb"] = m.scopes["root"].SubScope("fdb")
-	m.scopes["client"] = m.scopes["fdb"].SubScope("client")
-	m.scopes["cluster"] = m.scopes["fdb"].SubScope("cluster")
-	m.scopes["workload"] = m.scopes["cluster"].SubScope("workload")
+	m.AddScope(m.scopes["root"], "fdb", "fdb")
+	m.AddScope(m.scopes["fdb"], "client", "client")
+	m.AddScope(m.scopes["fdb"], "cluster", "cluster")
+	m.AddScope(m.scopes["cluster"], "workload", "workload")
 
+	// Add each impltemented group here
 	m.groups = []Collectable{
 		NewCoordinatorMetricGroup(&m),
 		NewDbStatusMetricGroup(&m),
@@ -74,11 +79,11 @@ func NewMetricInfo() MetricInfo {
 		NewWorkloadBytesMetricGroup(&m),
 		NewDataMetricGroup(&m),
 	}
-
-	return m
+	return &m
 }
 
-func (m *MetricInfo) Collect() {
+// Periodic data collection, called from main in a goroutine
+func (m *MetricReporter) Collect() {
 	// TODO make this configurable
 	interval := 10 * time.Second
 	ticker := time.NewTicker(interval)
@@ -89,7 +94,8 @@ func (m *MetricInfo) Collect() {
 	defer ticker.Stop()
 }
 
-func (m *MetricInfo) collectOnce() error {
+// Single data collection, fetches status, gets the metrics from each group
+func (m *MetricReporter) collectOnce() error {
 	var err error
 	m.status, err = db.GetStatus()
 	if err != nil {
@@ -107,13 +113,15 @@ func (m *MetricInfo) collectOnce() error {
 	return nil
 }
 
-func (m *MetricInfo) collectOnceFromFile(fileName string) error {
+// Used only in integration testing, collects metrics from a json file
+func (m *MetricReporter) collectOnceFromFile(fileName string) error {
 	// Used in testing
 	wd, err := os.Getwd()
 	if err != nil {
 		ulog.E(err)
 	}
 	testFilePath := fmt.Sprintf("%s/../%s/%s", wd, RelativeJsonFileLocation, fileName)
+	fmt.Println("collecting from ", testFilePath)
 	f, err := os.Open(testFilePath)
 	if err != nil {
 		ulog.E(err)
@@ -134,11 +142,11 @@ func (m *MetricInfo) collectOnceFromFile(fileName string) error {
 	return nil
 }
 
-func (m *MetricInfo) Close() {
+func (m *MetricReporter) Close() {
 	ulog.E(m.closer.Close())
 }
 
-func (m *MetricInfo) ServeHttp() {
+func (m *MetricReporter) ServeHttp() {
 	err := http.ListenAndServe(":8080", m.reporter.HTTPHandler())
 	if err != nil {
 		ulog.E(err)

@@ -15,17 +15,27 @@
 package metrics
 
 import (
+	"fmt"
+	"github.com/rs/zerolog/log"
 	"github.com/uber-go/tally"
 )
 
-func SetBoolGauge(scope tally.Scope, name string, tags map[string]string, value bool) {
-	scope.Tagged(tags).Gauge(name).Update(convertBool(value))
+func SetGauge(scope tally.Scope, name string, tags map[string]string, value interface{}) {
+	switch v := value.(type) {
+	case bool:
+		scope.Tagged(tags).Gauge(name).Update(convertBool(v))
+	case int:
+		scope.Tagged(tags).Gauge(name).Update(float64(v))
+	case float64:
+		scope.Tagged(tags).Gauge(name).Update(v)
+	default:
+		log.Error().Str("name", name).Msg("could not determine type for gauge")
+	}
 }
 
-func SetIntGauge(scope tally.Scope, name string, tags map[string]string, value int) {
-	scope.Tagged(tags).Gauge(name).Update(float64(value))
-}
-
-func SetFloatGauge(scope tally.Scope, name string, tags map[string]string, value float64) {
-	scope.Tagged(tags).Gauge(name).Update(value)
+func SetMultipleGauges(scope tally.Scope, metrics map[string]interface{}, tags map[string]string) {
+	for name, value := range metrics {
+		fmt.Println("setting ", value, " for ", name)
+		SetGauge(scope, name, tags, value)
+	}
 }

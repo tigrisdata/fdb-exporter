@@ -23,26 +23,45 @@ type WorkloadOperationsMetricGroup struct {
 	metricGroup
 }
 
-func NewWorkloadOperationsMetricGroup(info *MetricInfo) *WorkloadOperationsMetricGroup {
+func NewWorkloadOperationsMetricGroup(info *MetricReporter) *WorkloadOperationsMetricGroup {
 	return &WorkloadOperationsMetricGroup{*newMetricGroup("operations", info.GetScopeOrExit("workload"), info)}
 }
 
 func (w *WorkloadOperationsMetricGroup) GetMetrics(status *models.FullStatus) {
 	scope := w.GetScopeOrExit("default")
-	// TODO: check these individually
-	if status == nil || status.Cluster == nil || status.Cluster.Workload == nil || status.Cluster.Workload.Operations == nil {
-		log.Error().Msg("failed to get workload operations metric group")
+	metrics := make(map[string]interface{})
+	if !isValidWorkload(status) {
+		log.Error().Msg("failed to get workload metric group")
 		return
 	}
-	metrics := map[string]int{
-		"reads":              status.Cluster.Workload.Operations.Reads.Counter,
-		"writes":             status.Cluster.Workload.Operations.Writes.Counter,
-		"location_requests":  status.Cluster.Workload.Operations.LocationRequests.Counter,
-		"low_priority_reads": status.Cluster.Workload.Operations.LowPriorityReads.Counter,
-		"memory_errors":      status.Cluster.Workload.Operations.MemoryErrors.Counter,
-		"read_requests":      status.Cluster.Workload.Operations.ReadRequests.Counter,
+	workloadOperations := status.Cluster.Workload.Operations
+	if workloadOperations == nil {
+		log.Error().Msg("failed to get workload -> operations")
 	}
-	for name, value := range metrics {
-		SetIntGauge(scope, name, GetBaseTags(), value)
+	if workloadOperations.Reads != nil {
+		metrics["reads_count"] = workloadOperations.Reads.Counter
+		metrics["reads_hz"] = workloadOperations.Reads.Hz
 	}
+	if workloadOperations.Writes != nil {
+		metrics["writes_count"] = workloadOperations.Writes.Counter
+		metrics["writes_hz"] = workloadOperations.Writes.Hz
+	}
+	if workloadOperations.LocationRequests != nil {
+		metrics["location_requests_count"] = workloadOperations.LocationRequests.Counter
+		metrics["location_requests_hz"] = workloadOperations.LocationRequests.Hz
+	}
+	if workloadOperations.LowPriorityReads != nil {
+		metrics["low_priority_reads_count"] = workloadOperations.LowPriorityReads.Counter
+		metrics["low_priority_reads_hz"] = workloadOperations.LowPriorityReads.Hz
+	}
+	if workloadOperations.MemoryErrors != nil {
+		metrics["memory_errors_count"] = workloadOperations.MemoryErrors.Counter
+		metrics["memory_errors_hz"] = workloadOperations.MemoryErrors.Hz
+	}
+	if workloadOperations.ReadRequests != nil {
+		metrics["read_requests_count"] = workloadOperations.ReadRequests.Counter
+		metrics["read_requests_hz"] = workloadOperations.ReadRequests.Hz
+	}
+
+	SetMultipleGauges(scope, metrics, GetBaseTags())
 }

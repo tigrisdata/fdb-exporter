@@ -23,16 +23,25 @@ type WorkloadBytesMetricGroup struct {
 	metricGroup
 }
 
-func NewWorkloadBytesMetricGroup(info *MetricInfo) *WorkloadBytesMetricGroup {
+func NewWorkloadBytesMetricGroup(info *MetricReporter) *WorkloadBytesMetricGroup {
 	return &WorkloadBytesMetricGroup{*newMetricGroup("bytes", info.GetScopeOrExit("workload"), info)}
 }
 
 func (w *WorkloadBytesMetricGroup) GetMetrics(status *models.FullStatus) {
 	scope := w.GetScopeOrExit("default")
-	if status == nil || status.Cluster == nil || status.Cluster.Workload == nil || status.Cluster.Workload.Bytes == nil || status.Cluster.Workload.Bytes.Read == nil || status.Cluster.Workload.Bytes.Written == nil {
+	metrics := make(map[string]interface{})
+	if !isValidWorkload(status) {
 		log.Error().Msg("failed to get workload bytes metric group")
 		return
 	}
-	SetIntGauge(scope, "read", GetBaseTags(), status.Cluster.Workload.Bytes.Read.Counter)
-	SetIntGauge(scope, "written", GetBaseTags(), status.Cluster.Workload.Bytes.Written.Counter)
+	workloadBytes := status.Cluster.Workload.Bytes
+	if workloadBytes.Read != nil {
+		metrics["read_count"] = workloadBytes.Read.Counter
+		metrics["read_hz"] = workloadBytes.Read.Hz
+	}
+	if workloadBytes.Written != nil {
+		metrics["written_count"] = workloadBytes.Written.Counter
+		metrics["written_hz"] = workloadBytes.Written.Hz
+	}
+	SetMultipleGauges(scope, metrics, GetBaseTags())
 }

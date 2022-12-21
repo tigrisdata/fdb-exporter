@@ -43,7 +43,7 @@ func getFdb() fdb.Database {
 
 func GetStatus() (*models.FullStatus, error) {
 	conn := getFdb()
-	var status *models.FullStatus
+	var status models.FullStatus
 	statusKey := append([]byte{255, 255}, []byte("/status/json")...)
 	statusJson, err := conn.ReadTransact(func(t fdb.ReadTransaction) (interface{}, error) {
 		return t.Get(fdb.Key(statusKey)).Get()
@@ -53,11 +53,11 @@ func GetStatus() (*models.FullStatus, error) {
 		return nil, fmt.Errorf("failed to get status")
 	}
 
-	err = json.Unmarshal(statusJson.([]byte), status)
+	err = json.Unmarshal(statusJson.([]byte), &status)
 	if err != nil {
 		ulog.E(err)
 		return nil, fmt.Errorf("failed to unmarshal status")
 	}
 
-	return status, nil
+	return &status, nil
 }

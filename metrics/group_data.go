@@ -23,17 +23,17 @@ type DataMetricGroup struct {
 	metricGroup
 }
 
-func NewDataMetricGroup(info *MetricInfo) *DataMetricGroup {
+func NewDataMetricGroup(info *MetricReporter) *DataMetricGroup {
 	return &DataMetricGroup{*newMetricGroup("data", info.GetScopeOrExit("cluster"), info)}
 }
 
 func (d *DataMetricGroup) GetMetrics(status *models.FullStatus) {
 	scope := d.GetScopeOrExit("default")
-	if status == nil || status.Cluster == nil || status.Cluster.Data == nil || status.Cluster.Data.MovingData == nil {
+	if !isValidClusterData(status) || status.Cluster.Data.MovingData == nil {
 		log.Error().Msg("failed to get data metric group")
 		return
 	}
-	metrics := map[string]int{
+	metrics := map[string]interface{}{
 		"average_partition_size_bytes":               status.Cluster.Data.AveragePartitionSizeBytes,
 		"least_operating_space_bytes_log_server":     status.Cluster.Data.LeastOperatingSpaceBytesLogServer,
 		"least_operating_space_bytes_storage_server": status.Cluster.Data.LeastOperatingSpaceBytesStorageServer,
@@ -43,7 +43,5 @@ func (d *DataMetricGroup) GetMetrics(status *models.FullStatus) {
 		"total_disk_used_bytes":                      status.Cluster.Data.TotalDiskUsedBytes,
 		"total_kv_size_bytes":                        status.Cluster.Data.TotalKvSizeBytes,
 	}
-	for name, value := range metrics {
-		SetIntGauge(scope, name, GetBaseTags(), value)
-	}
+	SetMultipleGauges(scope, metrics, GetBaseTags())
 }

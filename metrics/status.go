@@ -12,24 +12,27 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package main
+package metrics
 
-import (
-	"sync"
+import "github.com/tigrisdata/fdb-exporter/models"
 
-	"github.com/tigrisdata/fdb-exporter/metrics"
-)
+func isValidClusterData(status *models.FullStatus) bool {
+	if status == nil || status.Cluster == nil || status.Cluster.Data == nil {
+		return false
+	}
+	return true
+}
 
-func main() {
-	var wg sync.WaitGroup
-	mInfo := metrics.NewMetricReporter()
-	defer mInfo.Close()
+func isValidClient(status *models.FullStatus) bool {
+	if status == nil || status.Client == nil {
+		return false
+	}
+	return true
+}
 
-	go mInfo.ServeHttp()
-	wg.Add(1)
-
-	go mInfo.Collect()
-	wg.Add(1)
-
-	wg.Wait()
+func isValidWorkload(status *models.FullStatus) bool {
+	if status == nil || status.Cluster == nil || status.Cluster.Workload == nil {
+		return false
+	}
+	return true
 }

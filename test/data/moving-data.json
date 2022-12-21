@@ -1,0 +1,38 @@
+{
+  "cluster": {
+    "data" : {
+      "average_partition_size_bytes" : 44925950,
+      "least_operating_space_bytes_log_server" : 96465968743,
+      "least_operating_space_bytes_storage_server" : 59625628987,
+      "moving_data" : {
+        "highest_priority" : 700,
+        "in_flight_bytes" : 1841963950,
+        "in_queue_bytes" : 53551732400,
+        "total_written_bytes" : 243651533196
+      },
+      "partitions_count" : 1797,
+      "state" : {
+        "description" : "Restoring replication factor",
+        "healthy" : false,
+        "min_replicas_remaining" : 3,
+        "name" : "healing"
+      },
+      "system_kv_size_bytes" : 0,
+      "team_trackers" : [
+        {
+          "in_flight_bytes" : 5014080963,
+          "primary" : true,
+          "state" : {
+            "description" : "Restoring replication factor",
+            "healthy" : false,
+            "min_replicas_remaining" : 3,
+            "name" : "healing"
+          },
+          "unhealthy_servers" : 2
+        }
+      ],
+      "total_disk_used_bytes" : 536435437664,
+      "total_kv_size_bytes" : 76704904129
+    }
+  }
+}

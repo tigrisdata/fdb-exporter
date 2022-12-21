@@ -12,24 +12,18 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package main
+package metrics
 
-import (
-	"sync"
+import "testing"
 
-	"github.com/tigrisdata/fdb-exporter/metrics"
-)
-
-func main() {
-	var wg sync.WaitGroup
-	mInfo := metrics.NewMetricReporter()
-	defer mInfo.Close()
-
-	go mInfo.ServeHttp()
-	wg.Add(1)
-
-	go mInfo.Collect()
-	wg.Add(1)
-
-	wg.Wait()
+func TestClientCoordinatorsSingleBasic(t *testing.T) {
+	initTestMetricReporter()
+	metrics := getMetricsFromTestFile(t, "status-single-basic.json")
+	// True represents a non-zero value, false represent zero value
+	expected := []string{
+		"fdb_client_coordinator_quorum",
+		"fdb_client_coordinator_reachable",
+		"fdb_client_coordinator_unreachable",
+	}
+	checkMetrics(t, metrics, expected)
 }

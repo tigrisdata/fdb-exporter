@@ -15,7 +15,6 @@
 package metrics
 
 import (
-	"fmt"
 	"github.com/rs/zerolog/log"
 	"github.com/uber-go/tally"
 )
@@ -35,7 +34,6 @@ func SetGauge(scope tally.Scope, name string, tags map[string]string, value inte
 
 func SetMultipleGauges(scope tally.Scope, metrics map[string]interface{}, tags map[string]string) {
 	for name, value := range metrics {
-		fmt.Println("setting ", value, " for ", name)
 		SetGauge(scope, name, tags, value)
 	}
 }

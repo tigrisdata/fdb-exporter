@@ -16,14 +16,15 @@ RUN GO11MODULE=on go mod download
 
 COPY . .
 
-RUN GO11MODULE=make build
+RUN go build -tags=release -buildvcs=false .
 
 FROM ubuntu:jammy
 
-COPY --from=0 /go/src/github.com/tigrisdata/fdb-exporter /fdb-exporter
+COPY --from=0 /go/src/github.com/tigrisdata/fdb-exporter/fdb-exporter /fdb-exporter
 
 RUN apt update && apt install -y wget && apt-get purge -y --auto-remove \
  && wget https://github.com/apple/foundationdb/releases/download/7.1.7/foundationdb-clients_7.1.7-1_amd64.deb \
- && dpkg -i foundationdb*.deb
+ && dpkg -i foundationdb*.deb \
+ && chmod +x /fdb-exporter
 
 ENTRYPOINT [ "/fdb-exporter" ]

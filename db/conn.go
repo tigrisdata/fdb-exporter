@@ -58,6 +58,5 @@ func GetStatus() (*models.FullStatus, error) {
 		ulog.E(err)
 		return nil, fmt.Errorf("failed to unmarshal status")
 	}
-
 	return &status, nil
 }

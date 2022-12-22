@@ -23,7 +23,6 @@ import (
 	"os"
 	"time"
 
-	"github.com/rs/zerolog/log"
 	"github.com/tigrisdata/fdb-exporter/db"
 
 	"github.com/tigrisdata/fdb-exporter/models"
@@ -78,6 +77,7 @@ func NewMetricReporter() *MetricReporter {
 		NewWorkloadKeysMetricGroup(&m),
 		NewWorkloadBytesMetricGroup(&m),
 		NewDataMetricGroup(&m),
+		NewProcessesMetricGroup(&m),
 	}
 	return &m
 }
@@ -87,6 +87,7 @@ func (m *MetricReporter) Collect() {
 	// TODO make this configurable
 	interval := 10 * time.Second
 	ticker := time.NewTicker(interval)
+
 	ulog.E(m.collectOnce())
 	for range ticker.C {
 		ulog.E(m.collectOnce())
@@ -109,7 +110,6 @@ func (m *MetricReporter) collectOnce() error {
 	for _, group := range m.groups {
 		group.GetMetrics(m.status)
 	}
-	log.Debug().Msg("collected once")
 	return nil
 }
 
@@ -121,7 +121,6 @@ func (m *MetricReporter) collectOnceFromFile(fileName string) error {
 		ulog.E(err)
 	}
 	testFilePath := fmt.Sprintf("%s/../%s/%s", wd, RelativeJsonFileLocation, fileName)
-	fmt.Println("collecting from ", testFilePath)
 	f, err := os.Open(testFilePath)
 	if err != nil {
 		ulog.E(err)

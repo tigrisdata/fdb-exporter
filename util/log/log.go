@@ -21,6 +21,6 @@ func E(err error) bool {
 		return false
 	}
 
-	log.Error().CallerSkipFrame(2).Msg("error")
+	log.Error().CallerSkipFrame(2).Str("error", err.Error()).Msg("error")
 	return true
 }

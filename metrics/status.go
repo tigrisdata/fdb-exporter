@@ -36,3 +36,10 @@ func isValidWorkload(status *models.FullStatus) bool {
 	}
 	return true
 }
+
+func isValidProcesses(status *models.FullStatus) bool {
+	if status == nil || status.Cluster == nil || status.Cluster.Processes == nil {
+		return false
+	}
+	return true
+}

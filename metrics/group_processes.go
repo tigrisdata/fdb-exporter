@@ -35,6 +35,13 @@ func (p *ProcessesMetricGroup) getTags(processName string, process *models.Proce
 	tags["storage"] = "0"
 	tags["log"] = "0"
 	tags["master"] = "0"
+	tags["coordinator"] = "0"
+	tags["commit_proxy"] = "0"
+	tags["grv_proxy"] = "0"
+	tags["cluster_controller"] = "0"
+	tags["data_distributor"] = "0"
+	tags["ratekeeper"] = "0"
+	tags["resolver"] = "0"
 	for _, role := range process.Roles {
 		switch role.Role {
 		case "storage":
@@ -43,6 +50,20 @@ func (p *ProcessesMetricGroup) getTags(processName string, process *models.Proce
 			tags["log"] = "1"
 		case "master":
 			tags["master"] = "1"
+		case "coordinator":
+			tags["coordinator"] = "1"
+		case "commit_proxy":
+			tags["commit_proxy"] = "1"
+		case "grv_proxy":
+			tags["grv_proxy"] = "1"
+		case "cluster_contoller":
+			tags["cluster_controller"] = "1"
+		case "data_distributor":
+			tags["data_distributor"] = "1"
+		case "ratekeeper":
+			tags["ratekeeper"] = "1"
+		case "resolver":
+			tags["resolver"] = "1"
 		}
 	}
 	return tags

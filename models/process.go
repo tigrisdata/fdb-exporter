@@ -50,7 +50,7 @@ type ProcessDiskCounter struct {
 }
 
 type ProcessLocality struct {
-	InstanceId string `json:"instanceid"`
+	InstanceId string `json:"instance_id"`
 	MachineId  string `json:"machineid"`
 	ProcessId  string `json:"processid"`
 	ZoneId     string `json:"zoneid"`

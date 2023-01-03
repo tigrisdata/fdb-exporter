@@ -62,7 +62,7 @@ func (p *ProcessesMetricGroup) getTags(processName string, process *models.Proce
 			tags["commit_proxy"] = "1"
 		case "grv_proxy":
 			tags["grv_proxy"] = "1"
-		case "cluster_contoller":
+		case "cluster_controller":
 			tags["cluster_controller"] = "1"
 		case "data_distributor":
 			tags["data_distributor"] = "1"

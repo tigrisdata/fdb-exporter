@@ -32,9 +32,9 @@ func (p *ProcessesMetricGroup) getTags(processName string, process *models.Proce
 
 	// Try to tag the name with the human readable name (as published by the operator) instead of the key in the json
 	if process.Locality != nil {
-		tags["name"] = process.Locality.InstanceId
+		tags["fdb_pod_name"] = process.Locality.InstanceId
 	} else {
-		tags["name"] = processName
+		tags["fdb_pod_name"] = processName
 	}
 	tags["class_type"] = process.ClassType
 	// On the same tally scope the same tag set should be present

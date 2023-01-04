@@ -21,7 +21,8 @@ func TestWorkloadKeysMetricGroupSingleBasic(t *testing.T) {
 	metrics := getMetricsFromTestFile(t, "status-single-basic.json")
 	// True represents a non-zero value, false represent zero value
 	expected := []string{
-		"fdb_cluster_workload_keys_read",
+		"fdb_cluster_workload_keys_read_count",
+		"fdb_cluster_workload_keys_read_hz",
 	}
 	checkMetrics(t, metrics, expected)
 }

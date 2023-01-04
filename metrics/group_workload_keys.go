@@ -29,9 +29,15 @@ func NewWorkloadKeysMetricGroup(info *MetricReporter) *WorkloadKeysMetricGroup {
 
 func (w *WorkloadKeysMetricGroup) GetMetrics(status *models.FullStatus) {
 	scope := w.GetScopeOrExit("default")
-	if !isValidWorkload(status) || status.Cluster.Workload.Keys == nil || &status.Cluster.Workload.Keys.Read == nil {
+	metrics := make(map[string]interface{})
+	if !isValidWorkload(status) {
 		log.Error().Msg("failed to get workload keys metric group")
 		return
 	}
-	SetGauge(scope, "read", GetBaseTags(), status.Cluster.Workload.Keys.Read.Counter)
+	workloadKeys := status.Cluster.Workload.Keys
+	if workloadKeys.Read != nil {
+		metrics["read_count"] = workloadKeys.Read.Counter
+		metrics["read_hz"] = workloadKeys.Read.Hz
+	}
+	SetMultipleGauges(scope, metrics, GetBaseTags())
 }

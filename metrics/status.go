@@ -23,6 +23,13 @@ func isValidClusterData(status *models.FullStatus) bool {
 	return true
 }
 
+func isValidClusterLatencyProbe(status *models.FullStatus) bool {
+	if status == nil || status.Cluster == nil || status.Cluster.LatencyProbe == nil {
+		return false
+	}
+	return true
+}
+
 func isValidClient(status *models.FullStatus) bool {
 	if status == nil || status.Client == nil {
 		return false

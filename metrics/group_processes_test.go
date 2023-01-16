@@ -49,6 +49,13 @@ func TestProcessesMetricGroupSingleBasic(t *testing.T) {
 		"fdb_cluster_processes_queue_disk_free_bytes",
 		"fdb_cluster_processes_queue_disk_total_bytes",
 		"fdb_cluster_processes_queue_disk_used_bytes",
+		"fdb_cluster_processes_data_lag_seconds",
+		"fdb_cluster_processes_data_lag_versions",
+		"fdb_cluster_processes_durability_lag_seconds",
+		"fdb_cluster_processes_durability_lag_versions",
+		"fdb_cluster_processes_log_queue_length",
+		"fdb_cluster_processes_input_bytes",
+		"fdb_cluster_processes_durability_bytes",
 	}
 	checkMetrics(t, metrics, expected)
 }

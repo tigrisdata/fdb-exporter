@@ -171,9 +171,23 @@ func (p *ProcessesMetricGroup) GetMetrics(status *models.FullStatus) {
 				metrics["queue_disk_total_bytes"] = role.QueueDiskTotalBytes
 				metrics["queue_disk_used_bytes"] = role.QueueDiskUsedBytes
 				metrics["stored_bytes"] = role.StoredBytes
+				if role.DataLag != nil {
+					metrics["data_lag_seconds"] = role.DataLag.Seconds
+					metrics["data_lag_versions"] = role.DataLag.Versions
+				}
+				if role.DurabilityLag != nil {
+					metrics["durability_lag_seconds"] = role.DurabilityLag.Seconds
+					metrics["durability_lag_versions"] = role.DurabilityLag.Versions
+				}
 				if role.TotalQueries != nil {
 					metrics["query_count"] = role.TotalQueries.Counter
 					metrics["query_hz"] = role.TotalQueries.Hz
+				}
+				if role.InputBytes != nil {
+					metrics["input_bytes"] = role.InputBytes.Counter
+				}
+				if role.DurableBytes != nil {
+					metrics["durability_bytes"] = role.DurableBytes.Counter
 				}
 
 				if role.ReadLatencyStatistics != nil {
@@ -194,6 +208,18 @@ func (p *ProcessesMetricGroup) GetMetrics(status *models.FullStatus) {
 				metrics["queue_disk_available_bytes"] = role.QueueDiskFreeBytes
 				metrics["queue_disk_total_bytes"] = role.QueueDiskTotalBytes
 				metrics["queue_disk_used_bytes"] = role.QueueDiskUsedBytes
+				if role.InputBytes != nil {
+					metrics["input_bytes"] = role.InputBytes.Counter
+				}
+				if role.DurableBytes != nil {
+					metrics["durability_bytes"] = role.DurableBytes.Counter
+				}
+				if role.InputBytes != nil && role.DurableBytes != nil {
+					// The input bytes shows how many bytes did the log receive, the number of durable bytes
+					// are already written to the storage server, if this is growing, storage servers are not taking
+					// writes or not taking writes fast enough
+					metrics["log_queue_length"] = role.InputBytes.Counter - role.DurableBytes.Counter
+				}
 			}
 		}
 		SetMultipleGauges(scope, metrics, tags)

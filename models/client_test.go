@@ -24,6 +24,6 @@ func TestClientStatusSingleBasic(t *testing.T) {
 	status := CheckJsonFile(t, "status-single-basic.json")
 	assert.Greater(t, len(status.Client.ClusterFile.Path), 0)
 	assert.GreaterOrEqual(t, len(status.Client.Messages), 0)
-	assert.Greater(t, status.Client.Timestamp, 0)
+	assert.Greater(t, status.Client.Timestamp, int64(0))
 	assert.Equal(t, len(status.Client.Coordinators.Coordinators), 1)
 }

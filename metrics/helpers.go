@@ -23,6 +23,8 @@ func SetGauge(scope tally.Scope, name string, tags map[string]string, value inte
 	switch v := value.(type) {
 	case bool:
 		scope.Tagged(tags).Gauge(name).Update(convertBool(v))
+	case int64:
+		scope.Tagged(tags).Gauge(name).Update(float64(v))
 	case int:
 		scope.Tagged(tags).Gauge(name).Update(float64(v))
 	case float64:

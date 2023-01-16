@@ -20,5 +20,5 @@ type ClientStatus struct {
 	Coordinators   *Coordinators   `json:"coordinators"`
 	DatabaseStatus *DatabaseStatus `json:"database_status"`
 	Messages       []ClientMessage `json:"messages"`
-	Timestamp      int             `json:"timestamp"`
+	Timestamp      int64           `json:"timestamp"`
 }

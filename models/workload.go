@@ -22,7 +22,7 @@ type Workload struct {
 }
 
 type WorkloadMetrics struct {
-	Counter   int     `json:"counter"`
+	Counter   int64   `json:"counter"`
 	Hz        float64 `json:"hz"`
 	Roughness float64 `json:"roughness"`
 }

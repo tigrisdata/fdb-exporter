@@ -25,11 +25,11 @@ func TestQosSingleBasic(t *testing.T) {
 	qos := status.Cluster.Qos
 	assert.Equal(t, qos.BatchReleasedTransactionsPerSecond, 0.0147207)
 	assert.Equal(t, qos.BatchTransactionsPerSecondLimit, 294386000.0)
-	assert.Equal(t, qos.LimitingQueueBytesStorageServer, 0)
+	assert.Equal(t, qos.LimitingQueueBytesStorageServer, int64(0))
 	assert.Equal(t, qos.ReleasedTransactionsPerSecond, 3.85887)
 	assert.Equal(t, qos.TransactionsPerSecondLimit, 137666000.0)
-	assert.Equal(t, qos.WorstQueueBytesLogServer, 2)
-	assert.Equal(t, qos.WorstQueueBytesStorageServer, 695)
+	assert.Equal(t, qos.WorstQueueBytesLogServer, int64(2))
+	assert.Equal(t, qos.WorstQueueBytesStorageServer, int64(695))
 }
 
 func TestQosPerformanceLimitedBySingleBasic(t *testing.T) {
@@ -37,19 +37,19 @@ func TestQosPerformanceLimitedBySingleBasic(t *testing.T) {
 	perfLimitedBy := status.Cluster.Qos.PerformanceLimitedBy
 	assert.Equal(t, perfLimitedBy.Description, "The database is not being saturated by the workload.")
 	assert.Equal(t, perfLimitedBy.Name, "workload")
-	assert.Equal(t, perfLimitedBy.ReasonId, 6)
+	assert.Equal(t, perfLimitedBy.ReasonId, int64(6))
 }
 
 func TestQosAutoThrottledTagsSingleBasic(t *testing.T) {
 	status := CheckJsonFile(t, "status-single-basic.json")
 	autoThrottledTags := status.Cluster.Qos.ThrottledTags.Auto
-	assert.Equal(t, autoThrottledTags.BusyRead, 0)
-	assert.Equal(t, autoThrottledTags.BusyWrite, 0)
-	assert.Equal(t, autoThrottledTags.Count, 0)
-	assert.Equal(t, autoThrottledTags.RecommendedOnly, 0)
+	assert.Equal(t, autoThrottledTags.BusyRead, int64(0))
+	assert.Equal(t, autoThrottledTags.BusyWrite, int64(0))
+	assert.Equal(t, autoThrottledTags.Count, int64(0))
+	assert.Equal(t, autoThrottledTags.RecommendedOnly, int64(0))
 }
 
 func TestQosManualThrottledTagsSingleBasic(t *testing.T) {
 	status := CheckJsonFile(t, "status-single-basic.json")
-	assert.Equal(t, status.Cluster.Qos.ThrottledTags.Manual.Count, 0)
+	assert.Equal(t, status.Cluster.Qos.ThrottledTags.Manual.Count, int64(0))
 }

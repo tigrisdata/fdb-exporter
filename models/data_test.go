@@ -23,28 +23,28 @@ import (
 func TestDataSingleBasic(t *testing.T) {
 	status := CheckJsonFile(t, "status-single-basic.json")
 	data := status.Cluster.Data
-	assert.Equal(t, data.AveragePartitionSizeBytes, 20668340)
-	assert.Equal(t, data.LeastOperatingSpaceBytesLogServer, 604285174979)
-	assert.Equal(t, data.LeastOperatingSpaceBytesStorageServer, 854875383)
-	assert.Equal(t, data.PartitionsCount, 2)
-	assert.Equal(t, data.TotalDiskUsedBytes, 542511104)
-	assert.Equal(t, data.TotalKvSizeBytes, 57120499)
+	assert.Equal(t, data.AveragePartitionSizeBytes, int64(20668340))
+	assert.Equal(t, data.LeastOperatingSpaceBytesLogServer, int64(604285174979))
+	assert.Equal(t, data.LeastOperatingSpaceBytesStorageServer, int64(854875383))
+	assert.Equal(t, data.PartitionsCount, int64(2))
+	assert.Equal(t, data.TotalDiskUsedBytes, int64(542511104))
+	assert.Equal(t, data.TotalKvSizeBytes, int64(57120499))
 }
 
 func TestMovingDataSingleBasic(t *testing.T) {
 	status := CheckJsonFile(t, "status-single-basic.json")
 	movingData := status.Cluster.Data.MovingData
-	assert.Equal(t, movingData.HighestPriority, 0)
-	assert.Equal(t, movingData.InFlightBytes, 0)
-	assert.Equal(t, movingData.InQueueBytes, 0)
-	assert.Equal(t, movingData.TotalWrittenBytes, 0)
+	assert.Equal(t, movingData.HighestPriority, int64(0))
+	assert.Equal(t, movingData.InFlightBytes, int64(0))
+	assert.Equal(t, movingData.InQueueBytes, int64(0))
+	assert.Equal(t, movingData.TotalWrittenBytes, int64(0))
 }
 
 func TestStateSingleBasic(t *testing.T) {
 	status := CheckJsonFile(t, "status-single-basic.json")
 	dataState := status.Cluster.Data.State
 	assert.Equal(t, dataState.Description, "")
-	assert.Equal(t, dataState.MinReplicasRemaining, 1)
+	assert.Equal(t, dataState.MinReplicasRemaining, int64(1))
 	assert.Equal(t, dataState.Healthy, true)
 	assert.Equal(t, dataState.Name, "healthy")
 }
@@ -53,9 +53,9 @@ func TestTeamTrackersSingleBasic(t *testing.T) {
 	status := CheckJsonFile(t, "status-single-basic.json")
 	assert.Equal(t, len(status.Cluster.Data.TeamTrackers), 1)
 	teamTracker := status.Cluster.Data.TeamTrackers[0]
-	assert.Equal(t, teamTracker.InFlightBytes, 0)
+	assert.Equal(t, teamTracker.InFlightBytes, int64(0))
 	assert.True(t, teamTracker.Primary)
 	assert.True(t, teamTracker.State.Healthy)
-	assert.Equal(t, teamTracker.State.MinReplicasRemaining, 1)
+	assert.Equal(t, teamTracker.State.MinReplicasRemaining, int64(1))
 	assert.Equal(t, teamTracker.State.Name, "healthy")
 }

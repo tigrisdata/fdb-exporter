@@ -71,6 +71,19 @@ type ProcessMessage struct {
 	Type          string `json:"type"`
 }
 
+type LatencyStats struct {
+	Count  int     `json:"count"`
+	Max    float64 `json:"max"`
+	Mean   float64 `json:"mean"`
+	Median float64 `json:"median"`
+	Min    float64 `json:"min"`
+	P25    float64 `json:"p25"`
+	P90    float64 `json:"p90"`
+	P95    float64 `json:"p95"`
+	P99    float64 `json:"p99"`
+	P999   float64 `json:"p99.9"`
+}
+
 type ProcessNetwork struct {
 	ConnectionErrors       *Hz `json:"connection_errors"`
 	ConnectionsClosed      *Hz `json:"connections_closed"`
@@ -81,8 +94,45 @@ type ProcessNetwork struct {
 	TlsPolicyFailures      *Hz `json:"tls_policy_failures"`
 }
 
+type GrvLatencyStats struct {
+	Batch   *LatencyStats `json:"batch"`
+	Default *LatencyStats `json:"default"`
+}
+
 type ProcessRole struct {
-	// TODO: implement the process specific fields of the roles (there are lots of them)
 	Id   string `json:"id"`
 	Role string `json:"role"`
+	// GRV proxy specific
+	GrvLatencyStatistics *GrvLatencyStats `json:"grv_latency_statistics"`
+	// Commit Proxy specific
+	CommitLatencyStatistics  *LatencyStats `json:"commit_latency_statistics"`
+	CommitBatchingWindowSize *LatencyStats `json:"commit_batching_window_size"`
+	// Storage and Log specific
+	KvStoreAvailableBytes   int64            `json:"kvstore_available_bytes"`
+	KvStoreFreeBytes        int64            `json:"kvstore_free_bytes"`
+	KvStoreTotalBytes       int64            `json:"kvstore_total_bytes"`
+	KvStoreUsedBytes        int64            `json:"kvstore_used_bytes"`
+	QueueDiskAvailableBytes int64            `json:"queue_disk_available_bytes"`
+	QueueDiskFreeBytes      int64            `json:"queue_disk_free_bytes"`
+	QueueDiskTotalBytes     int64            `json:"queue_disk_total_bytes"`
+	QueueDiskUsedBytes      int64            `json:"queue_disk_used_bytes"`
+	DataVersion             int64            `json:"data_version"`
+	DurableBytes            *WorkloadMetrics `json:"durable_bytes"`
+	InputBytes              *WorkloadMetrics `json:"input_bytes"`
+	// Only storage specific
+	BytesQueried          *WorkloadMetrics `json:"bytes_queried"`
+	DataLag               *Lag             `json:"data_lag"`
+	DurabilityLag         *Lag             `json:"durability_lag"`
+	DurableVersion        int64            `json:"durable_version"`
+	FetchedVersions       *WorkloadMetrics `json:"fetched_versions"`
+	FinishedQueries       *WorkloadMetrics `json:"finished_queries"`
+	KeysQueried           *WorkloadMetrics `json:"keys_queried"`
+	LocalRate             int64            `json:"local_rate"`
+	LowPriorityQueries    *WorkloadMetrics `json:"low_priority_queries"`
+	MutationBytes         *WorkloadMetrics `json:"mutation_bytes"`
+	Mutations             *WorkloadMetrics `json:"mutations"`
+	QueryQueueMax         int64            `json:"query_queue_max"`
+	ReadLatencyStatistics *LatencyStats    `json:"read_latency_statistics"`
+	StoredBytes           int64            `json:"stored_bytes"`
+	TotalQueries          *WorkloadMetrics `json:"total_queries"`
 }

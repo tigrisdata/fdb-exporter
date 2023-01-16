@@ -38,6 +38,17 @@ func TestProcessesMetricGroupSingleBasic(t *testing.T) {
 		"fdb_cluster_processes_network_current_connections",
 		"fdb_cluster_processes_network_megabits_sent",
 		"fdb_cluster_processes_network_megabits_received",
+		"fdb_cluster_grv_latency",
+		"fdb_cluster_commit_latency",
+		"fdb_cluster_processes_kvstore_available_bytes",
+		"fdb_cluster_processes_kvstore_free_bytes",
+		"fdb_cluster_processes_kvstore_total_bytes",
+		"fdb_cluster_processes_kvstore_used_bytes",
+		"fdb_cluster_processes_stored_bytes",
+		"fdb_cluster_processes_queue_disk_available_bytes",
+		"fdb_cluster_processes_queue_disk_free_bytes",
+		"fdb_cluster_processes_queue_disk_total_bytes",
+		"fdb_cluster_processes_queue_disk_used_bytes",
 	}
 	checkMetrics(t, metrics, expected)
 }

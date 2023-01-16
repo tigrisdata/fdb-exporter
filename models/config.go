@@ -15,24 +15,24 @@
 package models
 
 type Configuration struct {
-	BackupWorkerEnabled            int              `json:"backup_worker_enabled"`
-	BlobGranulesEnabled            int              `json:"blob_granules_enabled"`
-	CommitProxies                  int              `json:"commit_proxies"`
-	CoordinatorsCount              int              `json:"coordinators_count"`
+	BackupWorkerEnabled            int64            `json:"backup_worker_enabled"`
+	BlobGranulesEnabled            int64            `json:"blob_granules_enabled"`
+	CommitProxies                  int64            `json:"commit_proxies"`
+	CoordinatorsCount              int64            `json:"coordinators_count"`
 	ExcludedServers                []ExcludedServer `json:"excluded_servers"`
-	GrvProxies                     int              `json:"grv_proxies"`
-	LogRouters                     int              `json:"log_routers"`
-	Logs                           int              `json:"logs"`
-	PerpetualStorageWiggle         int              `json:"perpetual_storage_wiggle"`
+	GrvProxies                     int64            `json:"grv_proxies"`
+	LogRouters                     int64            `json:"log_routers"`
+	Logs                           int64            `json:"logs"`
+	PerpetualStorageWiggle         int64            `json:"perpetual_storage_wiggle"`
 	PerpetualStorageWiggleLocality string           `json:"perpetual_storage_wiggle_locality"`
-	Proxies                        int              `json:"proxies"`
+	Proxies                        int64            `json:"proxies"`
 	RedundancyMode                 string           `json:"redundancy_mode"`
-	RemoteLogs                     int              `json:"remote_logs"`
-	Resolvers                      int              `json:"resolvers"`
+	RemoteLogs                     int64            `json:"remote_logs"`
+	Resolvers                      int64            `json:"resolvers"`
 	StorageEngine                  string           `json:"storage_engine"`
 	StorageMigrationType           string           `json:"storage_migration_type"`
 	TenantMode                     string           `json:"tenant_mode"`
-	UsableRegions                  int              `json:"usable_regions"`
+	UsableRegions                  int64            `json:"usable_regions"`
 }
 
 type ExcludedServer struct {

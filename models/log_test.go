@@ -23,10 +23,10 @@ import (
 func TestLogSingleBasic(t *testing.T) {
 	status := CheckJsonFile(t, "status-single-basic.json")
 	clusterLog := status.Cluster.Logs[0]
-	assert.Equal(t, clusterLog.BeginVersion, 2264599536058)
+	assert.Equal(t, clusterLog.BeginVersion, int64(2264599536058))
 	assert.True(t, clusterLog.Current)
-	assert.Equal(t, clusterLog.Epoch, 58)
-	assert.Equal(t, clusterLog.LogFaultTolerance, 0)
-	assert.Equal(t, clusterLog.LogReplicationFactor, 1)
+	assert.Equal(t, clusterLog.Epoch, int64(58))
+	assert.Equal(t, clusterLog.LogFaultTolerance, int64(0))
+	assert.Equal(t, clusterLog.LogReplicationFactor, int64(1))
 	assert.Equal(t, clusterLog.PossiblyLosingData, false)
 }

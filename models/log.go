@@ -15,13 +15,13 @@
 package models
 
 type Log struct {
-	BeginVersion         int            `json:"begin_version"`
+	BeginVersion         int64          `json:"begin_version"`
 	Current              bool           `json:"current"`
-	Epoch                int            `json:"epoch"`
-	LogFaultTolerance    int            `json:"log_fault_tolerance"`
+	Epoch                int64          `json:"epoch"`
+	LogFaultTolerance    int64          `json:"log_fault_tolerance"`
 	LogInterfaces        []LogInterface `json:"log_interfaces"`
-	LogReplicationFactor int            `json:"log_replication_factor"`
-	LogWriteAntiQuorum   int            `json:"log_write_anti_quorum"`
+	LogReplicationFactor int64          `json:"log_replication_factor"`
+	LogWriteAntiQuorum   int64          `json:"log_write_anti_quorum"`
 	PossiblyLosingData   bool           `json:"possibly_losing_data"`
 }
 

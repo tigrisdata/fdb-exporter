@@ -19,17 +19,17 @@ type ClusterStatus struct {
 	// TODO: add support for clients and detecting version compatibility
 	// TODO: add support for incompatible connections
 	// TODO: add layers
-	ClusterControllerTimestamp int                `json:"cluster_controller_timestamp"`
+	ClusterControllerTimestamp int64              `json:"cluster_controller_timestamp"`
 	Configuration              *Configuration     `json:"configuration"`
 	ConnectionString           string             `json:"connection_string"`
 	Data                       *Data              `json:"data"`
 	DatabaseAvailable          bool               `json:"database_available"`
 	DatabaseLockState          *LockState         `json:"database_lock_state"`
 	DatacenterLag              Lag                `json:"datacenter_lag"`
-	DegradedProcesses          int                `json:"degraded_processes"`
+	DegradedProcesses          int64              `json:"degraded_processes"`
 	FaultTolerance             *FaultTolerance    `json:"fault_tolerance"`
 	FullReplication            bool               `json:"full_replication"`
-	Generation                 int                `json:"generation"`
+	Generation                 int64              `json:"generation"`
 	LatencyProbe               *LatencyProbe      `json:"latency_probe"`
 	Logs                       []Log              `json:"logs"`
 	Machines                   map[string]Machine `json:"machines"`
@@ -48,12 +48,12 @@ type LockState struct {
 
 type Lag struct {
 	Seconds  float64 `json:"seconds"`
-	Versions int     `json:"versions"`
+	Versions int64   `json:"versions"`
 }
 
 type FaultTolerance struct {
-	MaxZoneFailuresWithoutLosingAvailability int `json:"max_zone_failures_without_losing_availability"`
-	MaxZoneFailuresWithoutLosingData         int `json:"max_zone_failures_without_losing_data"`
+	MaxZoneFailuresWithoutLosingAvailability int64 `json:"max_zone_failures_without_losing_availability"`
+	MaxZoneFailuresWithoutLosingData         int64 `json:"max_zone_failures_without_losing_data"`
 }
 
 type LatencyProbe struct {
@@ -74,7 +74,7 @@ type PageCache struct {
 }
 
 type RecoveryState struct {
-	ActiveGenerations         int     `json:"active_generations"`
+	ActiveGenerations         int64   `json:"active_generations"`
 	Description               string  `json:"description"`
 	Name                      string  `json:"name"`
 	SecondsSinceLastRecovered float64 `json:"seconds_since_last_recovered"`

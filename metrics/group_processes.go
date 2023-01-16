@@ -24,7 +24,12 @@ type ProcessesMetricGroup struct {
 }
 
 func NewProcessesMetricGroup(reporter *MetricReporter) *ProcessesMetricGroup {
-	return &ProcessesMetricGroup{*newMetricGroup("processes", reporter.GetScopeOrExit("cluster"), reporter)}
+	parentScope := reporter.GetScopeOrExit("cluster")
+	p := &ProcessesMetricGroup{*newMetricGroup("processes", parentScope, reporter)}
+	p.AddScope(parentScope, "grv_lat", "grv")
+	p.AddScope(parentScope, "commit_lat", "commit")
+	p.AddScope(parentScope, "read_lat", "read")
+	return p
 }
 
 func (p *ProcessesMetricGroup) getTags(processName string, process *models.Process) map[string]string {
@@ -75,6 +80,18 @@ func (p *ProcessesMetricGroup) getTags(processName string, process *models.Proce
 	return tags
 }
 
+func (p *ProcessesMetricGroup) getLatencyTags(processName string, process *models.Process, quantile string) map[string]string {
+	tags := p.getTags(processName, process)
+	tags["quantile"] = quantile
+	return tags
+}
+
+func (p *ProcessesMetricGroup) getLatencyTagsWithPriority(processName string, process *models.Process, quantile string, priority string) map[string]string {
+	tags := p.getLatencyTags(processName, process, quantile)
+	tags["priority"] = priority
+	return tags
+}
+
 func (p *ProcessesMetricGroup) GetMetrics(status *models.FullStatus) {
 	scope := p.GetScopeOrExit("default")
 	if !isValidProcesses(status) {
@@ -115,6 +132,69 @@ func (p *ProcessesMetricGroup) GetMetrics(status *models.FullStatus) {
 			metrics["network_current_connections"] = process.Network.CurrentConnections
 			metrics["network_megabits_sent"] = process.Network.MegabitsSent.Hz
 			metrics["network_megabits_received"] = process.Network.MegabitsReceived.Hz
+		}
+		for _, role := range process.Roles {
+			switch role.Role {
+			case "grv_proxy":
+				if role.GrvLatencyStatistics != nil {
+					grvLatScope := p.GetScopeOrExit("grv_lat")
+					defaultMedianTags := p.getLatencyTagsWithPriority(processName, &process, "0.5", "default")
+					batchMedianTags := p.getLatencyTagsWithPriority(processName, &process, "0.5", "batch")
+					SetGauge(grvLatScope, "latency", defaultMedianTags, role.GrvLatencyStatistics.Default.Median)
+					SetGauge(grvLatScope, "latency", batchMedianTags, role.GrvLatencyStatistics.Batch.Median)
+					defaultP95Tags := p.getLatencyTagsWithPriority(processName, &process, "0.95", "default")
+					batchP95Tags := p.getLatencyTagsWithPriority(processName, &process, "0.95", "batch")
+					SetGauge(grvLatScope, "latency", defaultP95Tags, role.GrvLatencyStatistics.Default.P95)
+					SetGauge(grvLatScope, "latency", batchP95Tags, role.GrvLatencyStatistics.Batch.P95)
+					defaultP99Tags := p.getLatencyTagsWithPriority(processName, &process, "0.99", "default")
+					batchP99Tags := p.getLatencyTagsWithPriority(processName, &process, "0.99", "batch")
+					SetGauge(grvLatScope, "latency", defaultP99Tags, role.GrvLatencyStatistics.Default.P99)
+					SetGauge(grvLatScope, "latency", batchP99Tags, role.GrvLatencyStatistics.Batch.P99)
+				}
+			case "commit_proxy":
+				if role.CommitLatencyStatistics != nil {
+					commitLatScope := p.GetScopeOrExit("commit_lat")
+					medianTags := p.getLatencyTags(processName, &process, "0.5")
+					SetGauge(commitLatScope, "latency", medianTags, role.CommitLatencyStatistics.Median)
+					p95Tags := p.getLatencyTags(processName, &process, "0.95")
+					SetGauge(commitLatScope, "latency", p95Tags, role.CommitLatencyStatistics.P95)
+					p99Tags := p.getLatencyTags(processName, &process, "0.99")
+					SetGauge(commitLatScope, "latency", p99Tags, role.CommitLatencyStatistics.P99)
+				}
+			case "storage":
+				metrics["kvstore_available_bytes"] = role.KvStoreAvailableBytes
+				metrics["kvstore_free_bytes"] = role.KvStoreFreeBytes
+				metrics["kvstore_total_bytes"] = role.KvStoreTotalBytes
+				metrics["kvstore_used_bytes"] = role.KvStoreUsedBytes
+				metrics["queue_disk_available_bytes"] = role.QueueDiskAvailableBytes
+				metrics["queue_disk_free_bytes"] = role.QueueDiskFreeBytes
+				metrics["queue_disk_total_bytes"] = role.QueueDiskTotalBytes
+				metrics["queue_disk_used_bytes"] = role.QueueDiskUsedBytes
+				metrics["stored_bytes"] = role.StoredBytes
+				if role.TotalQueries != nil {
+					metrics["query_count"] = role.TotalQueries.Counter
+					metrics["query_hz"] = role.TotalQueries.Hz
+				}
+
+				if role.ReadLatencyStatistics != nil {
+					readLatScope := p.GetScopeOrExit("read_lat")
+					medianTags := p.getLatencyTags(processName, &process, "0.5")
+					SetGauge(readLatScope, "latency", medianTags, role.ReadLatencyStatistics.Median)
+					p95Tags := p.getLatencyTags(processName, &process, "0.95")
+					SetGauge(readLatScope, "latency", p95Tags, role.ReadLatencyStatistics.P95)
+					p99Tags := p.getLatencyTags(processName, &process, "0.99")
+					SetGauge(readLatScope, "latency", p99Tags, role.ReadLatencyStatistics.P99)
+				}
+			case "log":
+				metrics["kvstore_available_bytes"] = role.KvStoreAvailableBytes
+				metrics["kvstore_free_bytes"] = role.KvStoreFreeBytes
+				metrics["kvstore_total_bytes"] = role.KvStoreTotalBytes
+				metrics["kvstore_used_bytes"] = role.KvStoreUsedBytes
+				metrics["queue_disk_available_bytes"] = role.QueueDiskAvailableBytes
+				metrics["queue_disk_available_bytes"] = role.QueueDiskFreeBytes
+				metrics["queue_disk_total_bytes"] = role.QueueDiskTotalBytes
+				metrics["queue_disk_used_bytes"] = role.QueueDiskUsedBytes
+			}
 		}
 		SetMultipleGauges(scope, metrics, tags)
 	}

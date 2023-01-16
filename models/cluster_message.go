@@ -22,7 +22,7 @@ type ClusterMessage struct {
 
 type Issue struct {
 	Addresses   []string `json:"addresses"`
-	Count       int      `json:"count"`
+	Count       int64    `json:"count"`
 	Description string   `json:"description"`
 	Name        string   `json:"name"`
 }

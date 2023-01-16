@@ -22,11 +22,11 @@ import (
 
 func TestClusterStatusSingleBasic(t *testing.T) {
 	status := CheckJsonFile(t, "status-single-basic.json")
-	assert.Greater(t, status.Cluster.ClusterControllerTimestamp, 0)
+	assert.Greater(t, status.Cluster.ClusterControllerTimestamp, int64(0))
 	assert.Greater(t, len(status.Cluster.ConnectionString), 0)
 	assert.True(t, status.Cluster.DatabaseAvailable)
-	assert.Equal(t, status.Cluster.DegradedProcesses, 0)
+	assert.Equal(t, status.Cluster.DegradedProcesses, int64(0))
 	assert.True(t, status.Cluster.FullReplication)
-	assert.Equal(t, status.Cluster.Generation, 58)
+	assert.Equal(t, status.Cluster.Generation, int64(58))
 	assert.Equal(t, status.Cluster.ProtocolVersion, "fdb00b071010000")
 }

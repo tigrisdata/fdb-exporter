@@ -64,11 +64,11 @@ type ProcessMemory struct {
 }
 
 type ProcessMessage struct {
-	Description   string `json:"description"`
-	Name          string `json:"name"`
-	RawLogMessage string `json:"raw_log_message"`
-	Time          int    `json:"time"`
-	Type          string `json:"type"`
+	Description   string  `json:"description"`
+	Name          string  `json:"name"`
+	RawLogMessage string  `json:"raw_log_message"`
+	Time          float64 `json:"time"`
+	Type          string  `json:"type"`
 }
 
 type LatencyStats struct {

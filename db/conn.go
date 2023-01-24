@@ -18,6 +18,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"os"
+	"strconv"
 
 	"github.com/rs/zerolog/log"
 	ulog "github.com/tigrisdata/fdb-exporter/util/log"
@@ -26,13 +27,24 @@ import (
 	"github.com/tigrisdata/fdb-exporter/models"
 )
 
+const DefaultApiVersion = "710"
+
 func getFdb() fdb.Database {
 	clusterFile := os.Getenv("FDB_CLUSTER_FILE")
 	if clusterFile == "" {
 		log.Error().Msg("set FDB_CLUSTER_FILE environment variable")
 		os.Exit(1)
 	}
-	fdb.MustAPIVersion(710)
+	apiVersionStr := os.Getenv("FDB_API_VERSION")
+	if apiVersionStr == "" {
+		apiVersionStr = DefaultApiVersion
+	}
+	apiVersion, err := strconv.Atoi(apiVersionStr)
+	if err != nil {
+		log.Error().Str("FDB_API_VERSION", apiVersionStr).Msg("Could not convert api version to integer")
+	}
+
+	fdb.MustAPIVersion(apiVersion)
 	db, err := fdb.OpenDatabase(clusterFile)
 	if err != nil {
 		log.Error().Str("cluster_file", clusterFile).Msg("failed to open database using cluster file")

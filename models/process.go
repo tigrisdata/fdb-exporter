@@ -46,7 +46,7 @@ type ProcessDisk struct {
 type ProcessDiskCounter struct {
 	Counter int     `json:"counter"`
 	Hz      float64 `json:"hz"`
-	Sectors int     `json:"sectors"`
+	Sectors float64 `json:"sectors"`
 }
 
 type ProcessLocality struct {

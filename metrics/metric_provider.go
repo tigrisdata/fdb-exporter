@@ -1,4 +1,4 @@
-// Copyright 2022 Tigris Data, Inc.
+// Copyright 2022-2023 Tigris Data, Inc.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -31,7 +31,10 @@ import (
 	promreporter "github.com/uber-go/tally/prometheus"
 )
 
-const RelativeJsonFileLocation = "test/data"
+const (
+	RelativeJsonFileLocation = "test/data"
+	DefaultListenAddress     = ":8080"
+)
 
 // High level type that can report all the metrics.
 // Reponsible for:
@@ -147,7 +150,11 @@ func (m *MetricReporter) Close() {
 }
 
 func (m *MetricReporter) ServeHttp() {
-	err := http.ListenAndServe(":8080", m.reporter.HTTPHandler())
+	listenAddress := os.Getenv("FDB_EXPORTER_HTTP_LISTEN_ADDR")
+	if listenAddress == "" {
+		listenAddress = DefaultListenAddress
+	}
+	err := http.ListenAndServe(listenAddress, m.reporter.HTTPHandler())
 	if err != nil {
 		ulog.E(err)
 		os.Exit(1)

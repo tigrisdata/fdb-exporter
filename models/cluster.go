@@ -18,7 +18,6 @@ package models
 type ClusterStatus struct {
 	// TODO: add support for clients and detecting version compatibility
 	// TODO: add support for incompatible connections
-	// TODO: add layers
 	ClusterControllerTimestamp int64              `json:"cluster_controller_timestamp"`
 	Configuration              *Configuration     `json:"configuration"`
 	ConnectionString           string             `json:"connection_string"`
@@ -40,6 +39,7 @@ type ClusterStatus struct {
 	Qos                        *Qos               `json:"qos"`
 	RecoveryState              *RecoveryState     `json:"recovery_state"`
 	Workload                   *Workload          `json:"workload"`
+	Layers                     *Layers            `json:"layers"`
 }
 
 type LockState struct {

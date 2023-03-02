@@ -51,7 +51,7 @@ func TestProcessDiskReadsSingleBasic(t *testing.T) {
 	processDiskReads := status.Cluster.Processes["dbfd37cad094516ba1ee62c6345b3469"].Disk.Reads
 	assert.Equal(t, processDiskReads.Counter, 19058541)
 	assert.Equal(t, processDiskReads.Hz, 52.995899999999999)
-	assert.Equal(t, processDiskReads.Sectors, 0)
+	assert.Equal(t, processDiskReads.Sectors, float64(0))
 }
 
 func TestProcessDiskWritesSingleBasic(t *testing.T) {
@@ -59,7 +59,7 @@ func TestProcessDiskWritesSingleBasic(t *testing.T) {
 	processDiskWrites := status.Cluster.Processes["dbfd37cad094516ba1ee62c6345b3469"].Disk.Writes
 	assert.Equal(t, processDiskWrites.Counter, 42503287)
 	assert.Equal(t, processDiskWrites.Hz, 62.795099999999998)
-	assert.Equal(t, processDiskWrites.Sectors, 0)
+	assert.Equal(t, processDiskWrites.Sectors, float64(0))
 }
 
 func TestProcessLocalityWritesSingleBasic(t *testing.T) {

@@ -50,3 +50,10 @@ func isValidProcesses(status *models.FullStatus) bool {
 	}
 	return true
 }
+
+func isValidBackup(status *models.FullStatus) bool {
+	if status == nil || status.Cluster == nil || status.Cluster.Layers == nil || status.Cluster.Layers.Backup == nil {
+		return false
+	}
+	return true
+}

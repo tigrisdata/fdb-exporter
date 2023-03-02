@@ -1,0 +1,36 @@
+{
+  "cluster": {
+    "layers" : {
+      "_valid": true,
+      "dr_backup_dest": {
+        "instances": {
+          "1427712e65c40eb5d6e18d32be1613a9": {
+            "configured_workers": 10,
+            "id": "1427712e65c40eb5d6e18d32be1613a9",
+            "last_updated": 1675868470.7516923,
+            "main_thread_cpu_seconds": 40.516329000000006,
+            "memory_usage": 41984000,
+            "process_cpu_seconds": 40.516443999999993,
+            "resident_size": 24412160,
+            "version": "7.1.7"
+          }
+        },
+        "instances_running": 1,
+        "last_updated": 1675868470.7516923,
+        "paused": false,
+        "tags": {
+          "default": {
+            "backup_state": "is differential",
+            "mutation_log_bytes_written": 88,
+            "mutation_stream_id": "124e31f96919399c37db7e08f0d78b06",
+            "range_bytes_written": 175,
+            "running_backup": true,
+            "running_backup_is_restorable": true,
+            "seconds_behind": 69.928753999999998
+          }
+        },
+        "total_workers": 10
+      }
+    }
+  }
+}

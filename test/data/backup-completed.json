@@ -1,0 +1,57 @@
+{
+  "cluster": {
+    "layers" : {
+      "_valid": true,
+      "backup": {
+        "blob_recent_io": {
+          "bytes_per_second": 13.987258045991842,
+          "bytes_sent": 573,
+          "requests_failed": 1,
+          "requests_successful": 1
+        },
+        "instances": {
+          "a7c44a12377abe7a35362b8a520eac5a": {
+            "blob_stats": {
+              "recent": {
+                "bytes_per_second": 13.987258045991842,
+                "bytes_sent": 573,
+                "requests_failed": 1,
+                "requests_successful": 1
+              },
+              "total": {
+                "bytes_sent": 74027593,
+                "requests_failed": 26,
+                "requests_successful": 22
+              }
+            },
+            "configured_workers": 10,
+            "id": "a7c44a12377abe7a35362b8a520eac5a",
+            "last_updated": 1677239725.8276112,
+            "main_thread_cpu_seconds": 151.30681100000001,
+            "memory_usage": 138117120,
+            "process_cpu_seconds": 151.32503199999999,
+            "resident_size": 36950016,
+            "version": "7.1.7"
+          }
+        },
+        "instances_running": 1,
+        "last_updated": 1677239725.8276112,
+        "paused": false,
+        "tags": {
+          "default": {
+            "current_container": "blobstore://ACCESSKEY_HERE12/:2/SECRETKEY_HERE@s3.us-east-2.amazonaws.com:443/newnew?bucket=tigrisdb-infra-backups-us-east-2&sc=1",
+            "current_status": "has been completed",
+            "last_restorable_seconds_behind": 46.779859000000002,
+            "last_restorable_version": 73551594910,
+            "mutation_log_bytes_written": 0,
+            "mutation_stream_id": "880338fb0c70b04372e32c2aca45017d",
+            "range_bytes_written": 4111285,
+            "running_backup": false,
+            "running_backup_is_restorable": false
+          }
+        },
+        "total_workers": 10
+      }
+    }
+  }
+}

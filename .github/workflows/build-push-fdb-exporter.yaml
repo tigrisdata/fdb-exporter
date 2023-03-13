@@ -1,0 +1,60 @@
+name: publish docker image - fdb-exporter
+
+on:
+  pull_request:
+    paths:
+      - Dockerfile*
+      - .github/workflows/*.yaml
+  push:
+    branches:
+      - main
+
+env:
+  QUAY_REPO: "quay.io/tigrisdata/fdb-exporter"
+
+jobs:
+  build-image:
+    name: Build and Push image
+    runs-on: ubuntu-20.04
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@v2
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v2
+
+      - name: Login to Quay.io
+        uses: docker/login-action@v1
+        with:
+          registry: quay.io
+          username: ${{ secrets.QUAY_USER }}
+          password: ${{ secrets.QUAY_TOKEN }}
+
+      - name: Get short github SHA
+        id: var
+        shell: bash
+        run: |
+          echo "::set-output name=sha_short::$(git rev-parse --short HEAD)"
+
+      - name: Docker meta
+        id: meta
+        uses: docker/metadata-action@v4
+        with:
+          images: |
+            ${{ env.QUAY_REPO }}
+          tags: |
+            github-${{ steps.var.outputs.sha_short }}
+            latest
+
+      - name: Build and push Docker images
+        id: build-push-to-quay
+        uses: docker/build-push-action@v3
+        with:
+          context: .
+          file: Dockerfile
+          push: ${{ github.event_name != 'pull_request' }}
+          tags: ${{ steps.meta.outputs.tags }}

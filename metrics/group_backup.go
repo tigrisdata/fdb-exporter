@@ -58,8 +58,13 @@ func (b *BackupMetricGroup) getTaggedMetrics(status *models.FullStatus) {
 func (b *BackupMetricGroup) getInstanceMetrics(status *models.FullStatus) {
 	if !isValidBackup(status) {
 		log.Error().Msg("Failed to get backup instance metric group")
+		return
 	}
-	numInstances := len(status.Cluster.Layers.Backup.Instances)
-	instanceScope := b.GetScopeOrExit("backup_instances")
-	SetGauge(instanceScope, "count", GetBaseTags(), numInstances)
+	backup := status.Cluster.Layers.Backup
+
+	if backup.Instances != nil {
+		numInstances := len(status.Cluster.Layers.Backup.Instances)
+		instanceScope := b.GetScopeOrExit("backup_instances")
+		SetGauge(instanceScope, "count", GetBaseTags(), numInstances)
+	}
 }

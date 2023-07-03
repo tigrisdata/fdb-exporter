@@ -17,6 +17,7 @@ package metrics
 import (
 	"github.com/rs/zerolog/log"
 	"github.com/tigrisdata/fdb-exporter/models"
+	"os"
 )
 
 type ProcessesMetricGroup struct {
@@ -40,6 +41,11 @@ func (p *ProcessesMetricGroup) getTags(processName string, process *models.Proce
 		tags["fdb_pod_name"] = process.Locality.InstanceId
 	} else {
 		tags["fdb_pod_name"] = processName
+	}
+	// Allow the user to override it from an environment variable
+	fdbPodNameFromEnv := os.Getenv("FDB_POD_NAME")
+	if fdbPodNameFromEnv != "" {
+		tags["fdb_pod_name"] = fdbPodNameFromEnv
 	}
 	tags["class_type"] = process.ClassType
 	// On the same tally scope the same tag set should be present

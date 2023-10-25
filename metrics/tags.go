@@ -23,16 +23,18 @@ func getBaseTagKeys() []string {
 		"env",
 		"service",
 		"version",
+		"fdb_cluster",
 		"cluster",
 	}
 }
 
 func GetBaseTags() map[string]string {
 	return map[string]string{
-		"env":     getEnv(),
-		"service": getService(),
-		"version": getVersion(),
-		"cluster": getClusterName(),
+		"env":         getEnv(),
+		"service":     getService(),
+		"version":     getVersion(),
+		"fdb_cluster": getFDBClusterName(),
+		"cluster":     getClusterName(),
 	}
 }
 
@@ -63,8 +65,12 @@ func getVersion() string {
 	return getEnvOrDefault("FDB_VERSION", "default_version")
 }
 
+func getFDBClusterName() string {
+	return getEnvOrDefault("FDB_CLUSTER_NAME", "default_fdb_cluster_name")
+}
+
 func getClusterName() string {
-	return getEnvOrDefault("FDB_CLUSTER_NAME", "default_cluster_name")
+	return getEnvOrDefault("CLUSTER_NAME", "default_cluster_name")
 }
 
 func getDefaultValue(tagKey string) string {
@@ -75,7 +81,9 @@ func getDefaultValue(tagKey string) string {
 		return getService()
 	case "version":
 		return getVersion()
-	case "cluster_name":
+	case "fdb_cluster_name":
+		return getFDBClusterName()
+	case "cluster":
 		return getClusterName()
 	default:
 		return UnknownValue

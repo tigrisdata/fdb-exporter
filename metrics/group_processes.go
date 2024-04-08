@@ -17,10 +17,33 @@ package metrics
 import (
 	"github.com/rs/zerolog/log"
 	"github.com/tigrisdata/fdb-exporter/models"
+	"maps"
+	"strings"
 )
 
 type ProcessesMetricGroup struct {
 	metricGroup
+}
+
+func getProcessMessages(messages []models.ProcessMessage) map[string]any {
+	if len(messages) == 0 {
+		return nil
+	}
+	var nonErrorMessages int
+	var errorMessages int
+
+	res := make(map[string]any)
+	for _, message := range messages {
+		if strings.Contains(message.Name, "error") {
+			errorMessages += 1
+		} else {
+			nonErrorMessages += 1
+		}
+	}
+
+	res["messages_with_error"] = errorMessages
+	res["messages"] = nonErrorMessages
+	return res
 }
 
 func NewProcessesMetricGroup(reporter *MetricReporter) *ProcessesMetricGroup {
@@ -133,6 +156,10 @@ func (p *ProcessesMetricGroup) GetMetrics(status *models.FullStatus) {
 			metrics["network_megabits_sent"] = process.Network.MegabitsSent.Hz
 			metrics["network_megabits_received"] = process.Network.MegabitsReceived.Hz
 		}
+
+		processMessageMetrics := getProcessMessages(process.Messages)
+		maps.Copy(metrics, processMessageMetrics)
+
 		for _, role := range process.Roles {
 			switch role.Role {
 			case "grv_proxy":

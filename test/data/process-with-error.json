@@ -1,0 +1,283 @@
+{
+  "cluster" : {
+    "active_primary_dc" : "",
+    "active_tss_count" : 0,
+    "bounce_impact" : {
+      "can_clean_bounce" : true
+    },
+    "processes" : {
+      "dbfd37cad094516ba1ee62c6345b3469" : {
+        "address" : "127.0.0.1:4689",
+        "class_source" : "command_line",
+        "class_type" : "unset",
+        "command_line" : "/usr/local/libexec/fdbserver --cluster_file=/usr/local/etc/foundationdb/fdb.cluster --datadir=/usr/local/foundationdb/data/4689 --listen_address=public --logdir=/usr/local/foundationdb/logs --public_address=auto:4689",
+        "cpu" : {
+          "usage_cores" : 0.0277308
+        },
+        "disk" : {
+          "busy" : 0.022398300000000003,
+          "free_bytes" : 654297223168,
+          "reads" : {
+            "counter" : 19058541,
+            "hz" : 52.995899999999999,
+            "sectors" : 0
+          },
+          "total_bytes" : 1000240963584,
+          "writes" : {
+            "counter" : 42503287,
+            "hz" : 62.795099999999998,
+            "sectors" : 0
+          }
+        },
+        "excluded" : false,
+        "fault_domain" : "2f768c26fc0f01ce8af5402f7779b62c",
+        "locality" : {
+          "machineid" : "2f768c26fc0f01ce8af5402f7779b62c",
+          "processid" : "dbfd37cad094516ba1ee62c6345b3469",
+          "zoneid" : "2f768c26fc0f01ce8af5402f7779b62c"
+        },
+        "machine_id" : "2f768c26fc0f01ce8af5402f7779b62c",
+        "memory" : {
+          "available_bytes" : 8589934592,
+          "limit_bytes" : 8589934592,
+          "unused_allocated_memory" : 262144,
+          "used_bytes" : 37489426432
+        },
+        "messages" : [
+          {
+            "description" : "StorageServerFailed: io_error at Thu Mar 21 09:07:22 2024",
+            "name" : "io_error",
+            "raw_log_message" : "\"Severity\"=\"40\", \"ErrorKind\"=\"DiskIssue\", \"Time\"=\"1711012042.327756\", \"DateTime\"=\"2024-03-21T09:07:22Z\", \"Type\"=\"StorageServerFailed\", \"ID\"=\"09a7c434329dd438\", \"Error\"=\"io_error\", \"ErrorDescription\"=\"Disk i/o operation failed\", \"ErrorCode\"=\"1510\", \"Reason\"=\"Error\", \"ThreadID\"=\"18113398162693647773\", \"Backtrace\"=\"addr2line -e fdbserver.debug -p -C -f -i 0x364fd3c 0x364e960 0x364ed4e 0x1f95be1 0x1f9633c 0x1f96495 0x1f7029b 0x1f70522 0xad4a59 0x1f88657 0x1f891f5 0xeee960 0xeeec22 0xad4a59 0x1f7df90 0x1f7e1dc 0xeee960 0xeeec22 0xad4a59 0x1329bbf 0x11a8cc0 0x35ea9c2 0xa53969 0x7f743dc45555\", \"Machine\"=\"[3005:cafe:876:284::56]:4501\", \"LogGroup\"=\"prod-fdb-cluster\", \"Roles\"=\"SS\"",
+            "time" : 1711010000,
+            "type" : "StorageServerFailed"
+          }
+        ],
+        "network" : {
+          "connection_errors" : {
+            "hz" : 0
+          },
+          "connections_closed" : {
+            "hz" : 0
+          },
+          "connections_established" : {
+            "hz" : 0.199985
+          },
+          "current_connections" : 2,
+          "megabits_received" : {
+            "hz" : 0.043350300000000001
+          },
+          "megabits_sent" : {
+            "hz" : 0.054696600000000005
+          },
+          "tls_policy_failures" : {
+            "hz" : 0
+          }
+        },
+        "roles" : [
+          {
+            "id" : "40da69ee69f3a89b",
+            "role" : "master"
+          },
+          {
+            "id" : "3526c48e754c9999",
+            "role" : "cluster_controller"
+          },
+          {
+            "id" : "64292680c8f7b098",
+            "role" : "data_distributor"
+          },
+          {
+            "id" : "daaf66c325fe5067",
+            "role" : "ratekeeper"
+          },
+          {
+            "role" : "coordinator"
+          },
+          {
+            "commit_batching_window_size" : {
+              "count" : 24,
+              "max" : 0.00217702,
+              "mean" : 0.0021485099999999997,
+              "median" : 0.0021439200000000001,
+              "min" : 0.00211722,
+              "p25" : 0.0021381899999999999,
+              "p90" : 0.0021747300000000002,
+              "p95" : 0.0021761900000000002,
+              "p99" : 0.00217702,
+              "p99.9" : 0.00217702
+            },
+            "commit_latency_statistics" : {
+              "count" : 7,
+              "max" : 0.025518900000000001,
+              "mean" : 0.022464000000000001,
+              "median" : 0.0224941,
+              "min" : 0.0197611,
+              "p25" : 0.020555,
+              "p90" : 0.025518900000000001,
+              "p95" : 0.025518900000000001,
+              "p99" : 0.025518900000000001,
+              "p99.9" : 0.025518900000000001
+            },
+            "id" : "3ba9d1b34563925f",
+            "role" : "commit_proxy"
+          },
+          {
+            "grv_latency_statistics" : {
+              "batch" : {
+                "count" : 0,
+                "max" : 0,
+                "mean" : 0,
+                "median" : 0,
+                "min" : 0,
+                "p25" : 0,
+                "p90" : 0,
+                "p95" : 0,
+                "p99" : 0,
+                "p99.9" : 0
+              },
+              "default" : {
+                "count" : 250,
+                "max" : 0.00060606000000000006,
+                "mean" : 0.00017543299999999999,
+                "median" : 0.000149965,
+                "min" : 4.8875800000000011e-05,
+                "p25" : 0.000109911,
+                "p90" : 0.00033712400000000001,
+                "p95" : 0.00040793399999999999,
+                "p99" : 0.00049400300000000002,
+                "p99.9" : 0.00060606000000000006
+              }
+            },
+            "id" : "d105540aa5d0f03b",
+            "role" : "grv_proxy"
+          },
+          {
+            "data_version" : 2773842553556,
+            "durable_bytes" : {
+              "counter" : 22829235,
+              "hz" : 270.79300000000001,
+              "roughness" : 676.10500000000002
+            },
+            "id" : "7368af9e588efa13",
+            "input_bytes" : {
+              "counter" : 22829235,
+              "hz" : 0,
+              "roughness" : -1
+            },
+            "kvstore_available_bytes" : 654297223168,
+            "kvstore_free_bytes" : 654297223168,
+            "kvstore_total_bytes" : 1000240963584,
+            "kvstore_used_bytes" : 104882176,
+            "queue_disk_available_bytes" : 654297223168,
+            "queue_disk_free_bytes" : 654297223168,
+            "queue_disk_total_bytes" : 1000240963584,
+            "queue_disk_used_bytes" : 16855040,
+            "role" : "log"
+          },
+          {
+            "bytes_queried" : {
+              "counter" : 1521265096,
+              "hz" : 3361.9899999999998,
+              "roughness" : 1333.3800000000001
+            },
+            "data_lag" : {
+              "seconds" : 2.16744,
+              "versions" : 2167444
+            },
+            "data_version" : 2773842553556,
+            "durability_lag" : {
+              "seconds" : 5,
+              "versions" : 5000000
+            },
+            "durable_bytes" : {
+              "counter" : 138081574,
+              "hz" : 977.59699999999998,
+              "roughness" : 4887
+            },
+            "durable_version" : 2773837553556,
+            "fetched_versions" : {
+              "counter" : 509248017498,
+              "hz" : 1025890,
+              "roughness" : 2626230
+            },
+            "fetches_from_logs" : {
+              "counter" : 205357,
+              "hz" : 0.39999900000000005,
+              "roughness" : 0.023975200000000002
+            },
+            "finished_queries" : {
+              "counter" : 8821994,
+              "hz" : 21.1999,
+              "roughness" : 7.0472700000000001
+            },
+            "id" : "9525780b76c1b58e",
+            "input_bytes" : {
+              "counter" : 138081574,
+              "hz" : 0,
+              "roughness" : -1
+            },
+            "keys_queried" : {
+              "counter" : 4192507,
+              "hz" : 11.4,
+              "roughness" : 3.5246599999999999
+            },
+            "kvstore_available_bytes" : 954875366,
+            "kvstore_free_bytes" : 954875366,
+            "kvstore_inline_keys" : 0,
+            "kvstore_total_bytes" : 1073741824,
+            "kvstore_total_nodes" : 0,
+            "kvstore_total_size" : 0,
+            "kvstore_used_bytes" : 437628928,
+            "local_rate" : 100,
+            "low_priority_queries" : {
+              "counter" : 0,
+              "hz" : 0,
+              "roughness" : -1
+            },
+            "mutation_bytes" : {
+              "counter" : 16573859,
+              "hz" : 0,
+              "roughness" : -1
+            },
+            "mutations" : {
+              "counter" : 114104,
+              "hz" : 0,
+              "roughness" : -1
+            },
+            "query_queue_max" : 7,
+            "read_latency_statistics" : {
+              "count" : 1034,
+              "max" : 0.00035905800000000004,
+              "mean" : 6.5381299999999997e-05,
+              "median" : 5.6028400000000007e-05,
+              "min" : 5.0067899999999994e-06,
+              "p25" : 3.7908600000000005e-05,
+              "p90" : 0.000110865,
+              "p95" : 0.000136852,
+              "p99" : 0.00022101399999999998,
+              "p99.9" : 0.00032782600000000003
+            },
+            "role" : "storage",
+            "storage_metadata" : {
+              "created_time_datetime" : "2022-08-23 09:58:34.000 +0000",
+              "created_time_timestamp" : 1661250000
+            },
+            "stored_bytes" : 57120499,
+            "total_queries" : {
+              "counter" : 8821994,
+              "hz" : 21.1999,
+              "roughness" : 7.0466199999999999
+            }
+          },
+          {
+            "id" : "4aa625b089ae506a",
+            "role" : "resolver"
+          }
+        ],
+        "run_loop_busy" : 0.025193800000000002,
+        "uptime_seconds" : 509975,
+        "version" : "7.1.7"
+      }
+    }
+  }
+}

@@ -59,3 +59,13 @@ func TestProcessesMetricGroupSingleBasic(t *testing.T) {
 	}
 	checkMetrics(t, metrics, expected)
 }
+
+func TestProcessesWithErrors(t *testing.T) {
+	initTestMetricReporter()
+	metrics := getMetricsFromTestFile(t, "process-with-error.json")
+	expected := []string{
+		"fdb_cluster_processes_messages_with_error",
+		"fdb_cluster_processes_messages",
+	}
+	checkMetrics(t, metrics, expected)
+}

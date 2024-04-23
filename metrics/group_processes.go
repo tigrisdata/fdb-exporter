@@ -15,6 +15,8 @@
 package metrics
 
 import (
+	"fmt"
+
 	"github.com/rs/zerolog/log"
 	"github.com/tigrisdata/fdb-exporter/models"
 )
@@ -132,6 +134,15 @@ func (p *ProcessesMetricGroup) GetMetrics(status *models.FullStatus) {
 			metrics["network_current_connections"] = process.Network.CurrentConnections
 			metrics["network_megabits_sent"] = process.Network.MegabitsSent.Hz
 			metrics["network_megabits_received"] = process.Network.MegabitsReceived.Hz
+		}
+		if process.Messages != nil && len(process.Messages) > 0 {
+			msgCounter := make(map[string]int)
+			for _, msg := range process.Messages {
+				msgCounter[msg.Name] += 1
+			}
+			for t, count := range msgCounter {
+				metrics[fmt.Sprintf("messages_%s", t)] = count
+			}
 		}
 		for _, role := range process.Roles {
 			switch role.Role {

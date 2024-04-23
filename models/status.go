@@ -17,7 +17,7 @@ package models
 import (
 	"encoding/json"
 	"fmt"
-	"io/ioutil"
+	"io"
 	"os"
 )
 
@@ -42,13 +42,13 @@ func GetStatusFromFile(fileName string) (*FullStatus, error) {
 	}
 	defer f.Close()
 
-	jsonBytes, err := ioutil.ReadAll(f)
+	jsonBytes, err := io.ReadAll(f)
 	if err != nil {
 		return nil, fmt.Errorf("failed to read test file %s", testFilePath)
 	}
 	err = json.Unmarshal(jsonBytes, &status)
 	if err != nil {
-		return nil, fmt.Errorf("failed to unmarshel test file %s", testFilePath)
+		return nil, fmt.Errorf("failed to unmarshal test file %s", testFilePath)
 	}
 	return &status, nil
 }

@@ -18,7 +18,6 @@ import (
 	"encoding/json"
 	"fmt"
 	"io"
-	"io/ioutil"
 	"net/http"
 	"os"
 	"time"
@@ -131,7 +130,7 @@ func (m *MetricReporter) collectOnceFromFile(fileName string) error {
 		ulog.E(err)
 	}
 	defer f.Close()
-	jsonBytes, err := ioutil.ReadAll(f)
+	jsonBytes, err := io.ReadAll(f)
 	if err != nil {
 		ulog.E(err)
 	}

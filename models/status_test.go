@@ -21,3 +21,7 @@ import (
 func TestFullStatusSingleBasic(t *testing.T) {
 	CheckJsonFile(t, "status-single-basic.json")
 }
+
+func TestFullStatusProcessIOError(t *testing.T) {
+	CheckJsonFile(t, "status-process-io-timeout.json")
+}

@@ -15,8 +15,6 @@
 package metrics
 
 import (
-	"fmt"
-
 	"github.com/rs/zerolog/log"
 	"github.com/tigrisdata/fdb-exporter/models"
 )
@@ -94,6 +92,12 @@ func (p *ProcessesMetricGroup) getLatencyTagsWithPriority(processName string, pr
 	return tags
 }
 
+func (p *ProcessesMetricGroup) getMessagesTags(processName string, process *models.Process, messageName string) map[string]string {
+	tags := p.getTags(processName, process)
+	tags["message_name"] = messageName
+	return tags
+}
+
 func (p *ProcessesMetricGroup) GetMetrics(status *models.FullStatus) {
 	scope := p.GetScopeOrExit("default")
 	if !isValidProcesses(status) {
@@ -136,12 +140,13 @@ func (p *ProcessesMetricGroup) GetMetrics(status *models.FullStatus) {
 			metrics["network_megabits_received"] = process.Network.MegabitsReceived.Hz
 		}
 		if process.Messages != nil && len(process.Messages) > 0 {
-			msgCounter := make(map[string]int)
+			msgScope := p.GetScopeOrExit("messages")
+			counter := make(map[string]int)
 			for _, msg := range process.Messages {
-				msgCounter[msg.Name] += 1
+				counter[msg.Name] += 1
 			}
-			for t, count := range msgCounter {
-				metrics[fmt.Sprintf("messages_%s", t)] = count
+			for name, count := range counter {
+				SetGauge(msgScope, "messages", p.getMessagesTags(processName, &process, name), count)
 			}
 		}
 		for _, role := range process.Roles {

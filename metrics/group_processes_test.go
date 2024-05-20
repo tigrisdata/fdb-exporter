@@ -59,3 +59,12 @@ func TestProcessesMetricGroupSingleBasic(t *testing.T) {
 	}
 	checkMetrics(t, metrics, expected)
 }
+
+func TestProcessesMetricGroupMessages(t *testing.T) {
+	initTestMetricReporter()
+	metrics := getMetricsFromTestFile(t, "status-process-io-timeout.json")
+	expected := []string{
+		"fdb_cluster_processes_messages",
+	}
+	checkMetrics(t, metrics, expected)
+}

@@ -16,7 +16,7 @@ package metrics
 
 import (
 	"bufio"
-	"io/ioutil"
+	"io"
 	"net/http"
 	"net/http/httptest"
 	"regexp"
@@ -41,7 +41,7 @@ func getMetricsFromTestFile(t *testing.T, fileName string) []fetchedMetric {
 	if err != nil {
 		assert.Nil(t, err, "error getting metrics")
 	}
-	out, err := ioutil.ReadAll(resGet.Body)
+	out, err := io.ReadAll(resGet.Body)
 	if err != nil {
 		assert.Nil(t, err, "error reading metrics")
 	}

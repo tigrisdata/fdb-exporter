@@ -92,6 +92,12 @@ func (p *ProcessesMetricGroup) getLatencyTagsWithPriority(processName string, pr
 	return tags
 }
 
+func (p *ProcessesMetricGroup) getMessagesTags(processName string, process *models.Process, messageName string) map[string]string {
+	tags := p.getTags(processName, process)
+	tags["message_name"] = messageName
+	return tags
+}
+
 func (p *ProcessesMetricGroup) GetMetrics(status *models.FullStatus) {
 	scope := p.GetScopeOrExit("default")
 	if !isValidProcesses(status) {
@@ -132,6 +138,16 @@ func (p *ProcessesMetricGroup) GetMetrics(status *models.FullStatus) {
 			metrics["network_current_connections"] = process.Network.CurrentConnections
 			metrics["network_megabits_sent"] = process.Network.MegabitsSent.Hz
 			metrics["network_megabits_received"] = process.Network.MegabitsReceived.Hz
+		}
+		if process.Messages != nil && len(process.Messages) > 0 {
+			msgScope := p.GetScopeOrExit("messages")
+			counter := make(map[string]int)
+			for _, msg := range process.Messages {
+				counter[msg.Name] += 1
+			}
+			for name, count := range counter {
+				SetGauge(msgScope, "messages", p.getMessagesTags(processName, &process, name), count)
+			}
 		}
 		for _, role := range process.Roles {
 			switch role.Role {

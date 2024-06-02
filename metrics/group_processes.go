@@ -29,6 +29,7 @@ func NewProcessesMetricGroup(reporter *MetricReporter) *ProcessesMetricGroup {
 	p.AddScope(parentScope, "grv_lat", "grv")
 	p.AddScope(parentScope, "commit_lat", "commit")
 	p.AddScope(parentScope, "read_lat", "read")
+	p.AddScope(parentScope, "messages", "messages")
 	return p
 }
 

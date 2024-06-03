@@ -1,5 +1,7 @@
 BUILD_PARAMS="-tags=release"
 
+.PHONY: all test clean
+
 all: build
 
 build:
@@ -13,4 +15,5 @@ fmt:
 
 test:
 	# Set TEST_JSON_OUTPUT to -json to have a json output from the test
+	./test/install_test_deps.sh
 	go test "${TEST_PARAM}" ./...

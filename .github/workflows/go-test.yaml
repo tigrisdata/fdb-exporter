@@ -7,13 +7,13 @@ on:
   workflow_call:
 
   pull_request:
-    
+
 jobs:
   test:
     runs-on: ubuntu-latest
     steps:
       - name: Check out code
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
         with:
           submodules: true
 
@@ -23,4 +23,4 @@ jobs:
           TEST_PARAM: "-coverprofile=coverage.out -covermode=atomic"
 
       - name: Upload coverage to Codecov
-        uses: codecov/codecov-action@v3
+        uses: codecov/codecov-action@v4

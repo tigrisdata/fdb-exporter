@@ -82,6 +82,7 @@ func NewMetricReporter() *MetricReporter {
 		NewProcessesMetricGroup(&m),
 		NewLatencyProbeMetricGroup(&m),
 		NewBackupMetricGroup(&m),
+		NewClusterMessageMetricGroup(&m),
 	}
 	return &m
 }

@@ -29,7 +29,9 @@ func NewProcessesMetricGroup(reporter *MetricReporter) *ProcessesMetricGroup {
 	p.AddScope(parentScope, "grv_lat", "grv")
 	p.AddScope(parentScope, "commit_lat", "commit")
 	p.AddScope(parentScope, "read_lat", "read")
-	p.AddScope(parentScope, "messages", "messages")
+	// Scopes for messages, these are rarely emitted, but when they are, they are important
+	// This is the way FoundationDB warns about io_timeout and other things
+	p.AddScope(parentScope, "per_process", "per_process")
 	return p
 }
 
@@ -141,13 +143,14 @@ func (p *ProcessesMetricGroup) GetMetrics(status *models.FullStatus) {
 			metrics["network_megabits_received"] = process.Network.MegabitsReceived.Hz
 		}
 		if process.Messages != nil && len(process.Messages) > 0 {
-			msgScope := p.GetScopeOrExit("messages")
+			msgScope := p.GetScopeOrExit("per_process")
 			counter := make(map[string]int)
 			for _, msg := range process.Messages {
 				counter[msg.Name] += 1
 			}
 			for name, count := range counter {
-				SetGauge(msgScope, "messages", p.getMessagesTags(processName, &process, name), count)
+				messagesTags := p.getMessagesTags(processName, &process, name)
+				SetGauge(msgScope, "messages", messagesTags, count)
 			}
 		}
 		for _, role := range process.Roles {

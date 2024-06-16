@@ -14,7 +14,11 @@
 
 package metrics
 
-import "testing"
+import (
+	"fmt"
+	"strings"
+	"testing"
+)
 
 func TestProcessesMetricGroupSingleBasic(t *testing.T) {
 	initTestMetricReporter()
@@ -63,8 +67,14 @@ func TestProcessesMetricGroupSingleBasic(t *testing.T) {
 func TestProcessesMetricGroupMessages(t *testing.T) {
 	initTestMetricReporter()
 	metrics := getMetricsFromTestFile(t, "status-process-io-timeout.json")
+	for _, metric := range metrics {
+		if strings.Contains(metric.key, "message") {
+			fmt.Println(metric.key)
+		}
+
+	}
 	expected := []string{
-		"fdb_cluster_processes_messages",
+		"fdb_cluster_per_process_messages",
 	}
 	checkMetrics(t, metrics, expected)
 }

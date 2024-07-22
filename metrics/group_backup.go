@@ -37,6 +37,15 @@ func (b *BackupMetricGroup) GetMetrics(status *models.FullStatus) {
 	b.getInstanceMetrics(status)
 }
 
+func (b *BackupMetricGroup) getNoBackupMetrics(status *models.FullStatus) {
+	// If the backup section is not present emit fdb_cluster_backup_config_absent metric
+	if isValidBackup(status) {
+		return
+	}
+	taggedScope := b.GetScopeOrExit("backup_config")
+	SetGauge(taggedScope, "absent", GetBaseTags(), 1)
+}
+
 func (b *BackupMetricGroup) getTaggedMetrics(status *models.FullStatus) {
 	if !isValidBackup(status) {
 		log.Error().Msg("Failed to get backup tag metric group")

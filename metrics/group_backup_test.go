@@ -14,7 +14,9 @@
 
 package metrics
 
-import "testing"
+import (
+	"testing"
+)
 
 func TestBackup(t *testing.T) {
 	initTestMetricReporter()

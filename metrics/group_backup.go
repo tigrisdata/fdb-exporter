@@ -29,21 +29,33 @@ func NewBackupMetricGroup(reporter *MetricReporter) *BackupMetricGroup {
 	// In the future, other sections from the backup key might be processed here
 	b.AddScope(parentScope, "backup_tag", "backup_tag")
 	b.AddScope(parentScope, "backup_instances", "backup_instances")
+	b.AddScope(parentScope, "backup_config", "backup_config")
 	return b
 }
 
 func (b *BackupMetricGroup) GetMetrics(status *models.FullStatus) {
+	b.getNoBackupMetrics(status)
 	b.getTaggedMetrics(status)
 	b.getInstanceMetrics(status)
 }
 
-func (b *BackupMetricGroup) getNoBackupMetrics(status *models.FullStatus) {
-	// If the backup section is not present emit fdb_cluster_backup_config_absent metric
-	if isValidBackup(status) {
-		return
-	}
+func (b *BackupMetricGroup) emitNoBackupMetrics() {
 	taggedScope := b.GetScopeOrExit("backup_config")
 	SetGauge(taggedScope, "absent", GetBaseTags(), 1)
+}
+
+func (b *BackupMetricGroup) getNoBackupMetrics(status *models.FullStatus) {
+	// If the backup section is not present emit fdb_cluster_backup_config_absent metric
+	if !isValidBackup(status) {
+		// Emit if there is no backup section at all
+		b.emitNoBackupMetrics()
+	} else {
+		if status.Cluster.Layers.Backup.Tags == nil {
+			// Emit also if there is no tag section. That can happen when backup agents are connected, but nothing
+			// is configured.
+			b.emitNoBackupMetrics()
+		}
+	}
 }
 
 func (b *BackupMetricGroup) getTaggedMetrics(status *models.FullStatus) {

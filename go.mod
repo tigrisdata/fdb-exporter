@@ -4,6 +4,7 @@ go 1.18
 
 require (
 	github.com/apple/foundationdb/bindings/go v0.0.0-20220521054011-a88e049b28d8
+	github.com/m3db/prometheus_client_golang v1.12.8
 	github.com/rs/zerolog v1.28.0
 	github.com/stretchr/testify v1.8.1
 	github.com/uber-go/tally v3.5.0+incompatible
@@ -13,7 +14,6 @@ require (
 	github.com/beorn7/perks v1.0.1 // indirect
 	github.com/davecgh/go-spew v1.1.1 // indirect
 	github.com/golang/protobuf v1.5.2 // indirect
-	github.com/m3db/prometheus_client_golang v1.12.8 // indirect
 	github.com/m3db/prometheus_client_model v0.2.1 // indirect
 	github.com/m3db/prometheus_common v0.34.6 // indirect
 	github.com/mattn/go-colorable v0.1.12 // indirect

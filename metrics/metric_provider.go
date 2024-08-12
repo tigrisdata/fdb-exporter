@@ -60,9 +60,11 @@ func (mp *MetricProvider) Collect() {
 
 	ulog.E(mp.reporter.collectOnce())
 	for range ticker.C {
+		newReporter := NewMetricReporter()
+		ulog.E(newReporter.collectOnce())
+
 		mp.reporter.Close()
-		mp.reporter = NewMetricReporter()
-		ulog.E(mp.reporter.collectOnce())
+		mp.reporter = newReporter
 	}
 	defer ticker.Stop()
 }

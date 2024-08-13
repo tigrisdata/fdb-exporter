@@ -62,6 +62,7 @@ func (mp *MetricProvider) Collect() {
 	for range ticker.C {
 		newReporter := NewMetricReporter()
 		ulog.E(newReporter.collectOnce())
+		time.Sleep(1 * time.Second) // Wait a bit before serving new tally's data (otherwise the first query will return 0)
 
 		oldReporter := mp.reporter
 		mp.reporter = newReporter

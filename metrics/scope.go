@@ -43,8 +43,9 @@ func (s *scoped) GetScope(key string) (tally.Scope, error) {
 func (s *scoped) GetScopeOrExit(key string) tally.Scope {
 	scope, err := s.GetScope(key)
 	if err != nil {
-		log.Error().Str("key", key).Msg("scope not found")
-		ulog.E(err)
+		msg := "scope not found"
+		log.Error().Str("key", key).Msg(msg)
+		ulog.E(err, msg)
 		os.Exit(1)
 	}
 	return scope

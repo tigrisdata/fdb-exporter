@@ -93,11 +93,15 @@ func (m *MetricReporter) collectOnce() error {
 	var err error
 	m.status, err = db.GetStatus()
 	if err != nil {
-		return fmt.Errorf("failed to get status")
+		err := fmt.Errorf("failed to get status")
+		ulog.E(err, err.Error())
+		return err
 	}
 
 	if len(m.groups) == 0 {
-		ulog.E(fmt.Errorf("no metric groups detected"))
+		err := fmt.Errorf("no metric groups detected")
+		ulog.E(err, err.Error())
+		return err
 	}
 
 	for _, group := range m.groups {
@@ -111,21 +115,25 @@ func (m *MetricReporter) collectOnceFromFile(fileName string) error {
 	// Used in testing
 	wd, err := os.Getwd()
 	if err != nil {
-		ulog.E(err)
+		ulog.E(err, "failed to get working dir for collection from file")
+		return err
 	}
 	testFilePath := fmt.Sprintf("%s/../%s/%s", wd, RelativeJsonFileLocation, fileName)
 	f, err := os.Open(testFilePath)
 	if err != nil {
-		ulog.E(err)
+		ulog.E(err, "failed to open test file")
+		return err
 	}
 	defer f.Close()
 	jsonBytes, err := io.ReadAll(f)
 	if err != nil {
-		ulog.E(err)
+		ulog.E(err, "failed to read json bytes from test file")
+		return err
 	}
 	err = json.Unmarshal(jsonBytes, &m.status)
 	if err != nil {
-		ulog.E(err)
+		ulog.E(err, "failed to unmarshall json bytes into status object")
+		return err
 	}
 
 	for _, group := range m.groups {
@@ -135,5 +143,7 @@ func (m *MetricReporter) collectOnceFromFile(fileName string) error {
 }
 
 func (m *MetricReporter) Close() {
-	ulog.E(m.closer.Close())
+	if err := m.closer.Close(); err != nil {
+		ulog.E(err, "failed to close reporter")
+	}
 }

@@ -16,11 +16,14 @@ package log
 
 import "github.com/rs/zerolog/log"
 
-func E(err error) bool {
+func E(err error, msg string) bool {
 	if err == nil {
 		return false
 	}
 
-	log.Error().CallerSkipFrame(2).Str("error", err.Error()).Msg("error")
+	if msg == "" {
+		msg = "error"
+	}
+	log.Error().CallerSkipFrame(2).Str("error", err.Error()).Msg(msg)
 	return true
 }

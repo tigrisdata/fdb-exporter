@@ -16,7 +16,6 @@ package db
 
 import (
 	"encoding/json"
-	"fmt"
 	"os"
 	"strconv"
 
@@ -61,14 +60,16 @@ func GetStatus() (*models.FullStatus, error) {
 		return t.Get(fdb.Key(statusKey)).Get()
 	})
 	if err != nil {
-		ulog.E(err)
-		return nil, fmt.Errorf("failed to get status")
+		msg := "failed to get status"
+		ulog.E(err, msg)
+		return nil, err
 	}
 
 	err = json.Unmarshal(statusJson.([]byte), &status)
 	if err != nil {
-		ulog.E(err)
-		return nil, fmt.Errorf("failed to unmarshal status")
+		msg := "failed to unmarshal status"
+		ulog.E(err, msg)
+		return nil, err
 	}
 	return &status, nil
 }

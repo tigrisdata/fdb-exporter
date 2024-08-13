@@ -39,7 +39,7 @@ func (mp *MetricProvider) ServeHttp() {
 	}
 	err := http.ListenAndServe(listenAddress, mp)
 	if err != nil {
-		ulog.E(err)
+		ulog.E(err, "failed to start listening")
 		os.Exit(1)
 	}
 }
@@ -49,7 +49,9 @@ func (mp *MetricProvider) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 }
 
 func (m *MetricProvider) Close() {
-	ulog.E(m.reporter.closer.Close())
+	if err := m.reporter.closer.Close(); err != nil {
+		ulog.E(err, "failed to close provider's reporter")
+	}
 }
 
 // Periodic data collection, called from main in a goroutine
@@ -58,10 +60,14 @@ func (mp *MetricProvider) Collect() {
 	interval := 10 * time.Second
 	ticker := time.NewTicker(interval)
 
-	ulog.E(mp.reporter.collectOnce())
+	if err := mp.reporter.collectOnce(); err != nil {
+		ulog.E(err, "failed to collect metrics")
+	}
 	for range ticker.C {
 		newReporter := NewMetricReporter()
-		ulog.E(newReporter.collectOnce())
+		if err := newReporter.collectOnce(); err != nil {
+			ulog.E(err, "failed to collect metrics in a tick")
+		}
 		time.Sleep(1 * time.Second) // Wait a bit before serving new tally's data (otherwise the first query will return 0)
 
 		oldReporter := mp.reporter

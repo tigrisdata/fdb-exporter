@@ -22,6 +22,7 @@ type Process struct {
 	Cpu         *ProcessCpu      `json:"cpu"`
 	Disk        *ProcessDisk     `json:"disk"`
 	Excluded    bool             `json:"excluded"`
+	Degraded    bool             `json:"degraded"`
 	FaultDomain string           `json:"fault_domain"`
 	Locality    *ProcessLocality `json:"locality"`
 	MachineId   string           `json:"machine_id"`

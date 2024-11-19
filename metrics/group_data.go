@@ -33,6 +33,12 @@ func (d *DataMetricGroup) GetMetrics(status *models.FullStatus) {
 		log.Error().Msg("failed to get data metric group")
 		return
 	}
+
+	missingData := 0
+	if status.Cluster.Data.State.Name == "missing_data" {
+		missingData = 1
+	}
+
 	metrics := map[string]interface{}{
 		"average_partition_size_bytes":               status.Cluster.Data.AveragePartitionSizeBytes,
 		"least_operating_space_bytes_log_server":     status.Cluster.Data.LeastOperatingSpaceBytesLogServer,
@@ -42,6 +48,8 @@ func (d *DataMetricGroup) GetMetrics(status *models.FullStatus) {
 		"moving_data_total_written_types":            status.Cluster.Data.MovingData.TotalWrittenBytes,
 		"total_disk_used_bytes":                      status.Cluster.Data.TotalDiskUsedBytes,
 		"total_kv_size_bytes":                        status.Cluster.Data.TotalKvSizeBytes,
+		"min_replicas_remaining":                     status.Cluster.Data.State.MinReplicasRemaining,
+		"missing_data":                               missingData,
 	}
 	SetMultipleGauges(scope, metrics, GetBaseTags())
 }

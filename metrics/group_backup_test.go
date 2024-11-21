@@ -27,5 +27,6 @@ func TestBackup(t *testing.T) {
 		"fdb_cluster_backup_tag_running_is_restorable",
 		"fdb_cluster_backup_instances_count",
 	}
+
 	checkMetrics(t, metrics, expected)
 }

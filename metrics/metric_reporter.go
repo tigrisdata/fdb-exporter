@@ -82,8 +82,11 @@ func NewMetricReporter() *MetricReporter {
 		NewDataMetricGroup(&m),
 		NewProcessesMetricGroup(&m),
 		NewLatencyProbeMetricGroup(&m),
-		NewBackupMetricGroup(&m),
 		NewClusterMessageMetricGroup(&m),
+	}
+
+	if os.Getenv("FDB_EXPORTER_NO_BACKUP_REPORTING") == "" {
+		m.groups = append(m.groups, NewBackupMetricGroup(&m))
 	}
 	return &m
 }

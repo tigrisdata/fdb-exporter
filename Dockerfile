@@ -1,4 +1,4 @@
-FROM ubuntu:jammy
+FROM --platform=amd64 ubuntu:jammy
 
 ENV GOPATH /go
 
@@ -18,7 +18,7 @@ COPY . .
 
 RUN go build -tags=release -buildvcs=false .
 
-FROM ubuntu:jammy
+FROM --platform=amd64 ubuntu:jammy
 
 COPY --from=0 /go/src/github.com/tigrisdata/fdb-exporter/fdb-exporter /fdb-exporter
 

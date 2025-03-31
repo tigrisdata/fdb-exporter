@@ -49,6 +49,7 @@ func (d *DataMetricGroup) GetMetrics(status *models.FullStatus) {
 		"total_disk_used_bytes":                      status.Cluster.Data.TotalDiskUsedBytes,
 		"total_kv_size_bytes":                        status.Cluster.Data.TotalKvSizeBytes,
 		"min_replicas_remaining":                     status.Cluster.Data.State.MinReplicasRemaining,
+		"state_health":                               status.Cluster.Data.State.Healthy,
 		"missing_data":                               missingData,
 	}
 	SetMultipleGauges(scope, metrics, GetBaseTags())

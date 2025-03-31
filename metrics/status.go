@@ -16,6 +16,20 @@ package metrics
 
 import "github.com/tigrisdata/fdb-exporter/models"
 
+func isValidClusterLockState(status *models.FullStatus) bool {
+	if status == nil || status.Cluster == nil || status.Cluster.DatabaseLockState == nil {
+		return false
+	}
+	return true
+}
+
+func isValidClusterFaultTolerance(status *models.FullStatus) bool {
+	if status == nil || status.Cluster == nil || status.Cluster.FaultTolerance == nil {
+		return false
+	}
+	return true
+}
+
 func isValidClusterData(status *models.FullStatus) bool {
 	if status == nil || status.Cluster == nil || status.Cluster.Data == nil {
 		return false

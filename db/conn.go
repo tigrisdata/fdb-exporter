@@ -15,8 +15,10 @@
 package db
 
 import (
+	"bufio"
 	"encoding/json"
 	"os"
+	"regexp"
 	"strconv"
 
 	"github.com/rs/zerolog/log"
@@ -27,6 +29,11 @@ import (
 )
 
 const DefaultApiVersion = "710"
+
+var (
+	tls     = false
+	netopts fdb.NetworkOptions
+)
 
 func getFdb() fdb.Database {
 	clusterFile := os.Getenv("FDB_CLUSTER_FILE")
@@ -42,8 +49,48 @@ func getFdb() fdb.Database {
 	if err != nil {
 		log.Error().Str("FDB_API_VERSION", apiVersionStr).Msg("Could not convert api version to integer")
 	}
+	tlsCaFile := os.Getenv("FDB_TLS_CA_FILE")
+	tlsCertFile := os.Getenv("FDB_TLS_CERT_FILE")
+	tlsKeyFile := os.Getenv("FDB_TLS_KEY_FILE")
+	tlsCheckValid := os.Getenv("FDB_TLS_VERIFY_PEERS")
 
 	fdb.MustAPIVersion(apiVersion)
+	netopts = fdb.Options()
+
+	// Check TLS in clusterfile
+	tls = isTLSmode(&clusterFile)
+	if tls {
+		// TLS params for fdbclient
+		if len(tlsCaFile) > 0 {
+			err := netopts.SetTLSCaPath(tlsCaFile)
+			if err != nil {
+				log.Error().Err(err).Str("msg", "Error cannot set CA").Msg("TLS CA error")
+			}
+			log.Info().Str("msg", "TLS CA File").Str("fdb.tls-ca-file", tlsCaFile).Msg("TLS CA file set")
+		}
+
+		if len(tlsCertFile) > 0 {
+			err := netopts.SetTLSCertPath(tlsCertFile)
+			if err != nil {
+				log.Error().Err(err).Str("msg", "Error cannot set Cert").Msg("TLS Cert error")
+			}
+			log.Info().Str("msg", "TLS Cert File").Str("fdb.tls-cert-file", tlsCertFile).Msg("TLS cert file set")
+		}
+
+		if len(tlsKeyFile) > 0 {
+			err := netopts.SetTLSKeyPath(tlsKeyFile)
+			if err != nil {
+				log.Error().Err(err).Str("msg", "Error cannot set Key").Msg("TLS Key error")
+			}
+			log.Info().Str("msg", "TLS Private Key").Str("fdb.tls-key-file", tlsKeyFile).Msg("TLS private key set")
+		}
+
+		err := netopts.SetTLSVerifyPeers([]byte(tlsCheckValid))
+		if err != nil {
+			log.Error().Err(err).Str("msg", "Error cannot set VerifyPeers").Msg("TLS VerifyPeers error")
+		}
+		log.Info().Str("msg", "TLS VerifyPeers").Str("fdb.tls-check-valid", tlsCheckValid).Msg("TLS VerifyPeers set")
+	}
 	db, err := fdb.OpenDatabase(clusterFile)
 	if err != nil {
 		log.Error().Str("cluster_file", clusterFile).Msg("failed to open database using cluster file")
@@ -72,4 +119,32 @@ func GetStatus() (*models.FullStatus, error) {
 		return nil, err
 	}
 	return &status, nil
+}
+
+func isTLSmode(c *string) bool {
+	// Find if must run in TLS mode
+	file, err := os.Open(*c)
+	if err != nil {
+		log.Fatal().Err(err).Msgf("failed to open %s", *c)
+	}
+
+	scanner := bufio.NewScanner(file)
+	scanner.Split(bufio.ScanLines)
+	var text []string
+
+	for scanner.Scan() {
+		text = append(text, scanner.Text())
+	}
+
+	// The method os.File.Close() is called
+	// on the os.File object to close the file
+	file.Close()
+
+	// and then a loop iterates through
+	// and prints each of the slice values.
+	for _, eachLn := range text {
+		//docker:docker@172.19.0.2:4500:tls
+		tls, err = regexp.Match(`[0-9]+:tls`, []byte(eachLn))
+	}
+	return tls
 }

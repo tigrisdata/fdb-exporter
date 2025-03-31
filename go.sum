@@ -40,6 +40,10 @@ github.com/alecthomas/units v0.0.0-20190717042225-c3de453c63f4/go.mod h1:ybxpYRF
 github.com/alecthomas/units v0.0.0-20190924025748-f65c72e2690d/go.mod h1:rBZYJk541a8SKzHPHnH3zbiI+7dagKZ0cgpgrD7Fyho=
 github.com/apple/foundationdb/bindings/go v0.0.0-20220521054011-a88e049b28d8 h1:B1KM1sz2bMjLThSQZSg+2kE2OBFMbtGdDcekqj0t2z0=
 github.com/apple/foundationdb/bindings/go v0.0.0-20220521054011-a88e049b28d8/go.mod h1:w63jdZTFCtvdjsUj5yrdKgjxaAD5uXQX6hJ7EaiLFRs=
+github.com/apple/foundationdb/bindings/go v0.0.0-20231025163521-0301045e333a h1:dBykmcZ1/zh36vj9aPC/6FXS4fx0OoPpAkHuqTwDJyw=
+github.com/apple/foundationdb/bindings/go v0.0.0-20231025163521-0301045e333a/go.mod h1:OMVSB21p9+xQUIqlGizHPZfjK+SHws1ht+ZytVDoz9U=
+github.com/apple/foundationdb/bindings/go v0.0.0-20250221231555-5140696da2df h1:XlE/l8moueBRTJr7xt0/9f0HJ1FaLupzguIKoj0a74g=
+github.com/apple/foundationdb/bindings/go v0.0.0-20250221231555-5140696da2df/go.mod h1:OMVSB21p9+xQUIqlGizHPZfjK+SHws1ht+ZytVDoz9U=
 github.com/beorn7/perks v0.0.0-20180321164747-3a771d992973/go.mod h1:Dwedo/Wpr24TaqPxmxbtue+5NUziq4I4S80YR8gNf3Q=
 github.com/beorn7/perks v1.0.0/go.mod h1:KWe93zE9D1o94FZ5RNwFwVgaQK1VOXiVxmqh+CedLV8=
 github.com/beorn7/perks v1.0.1 h1:VlbKKnNfV8bJzeqoa4cOKqO6bYr3WgKZxO8Z16+hsOM=

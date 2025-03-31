@@ -75,6 +75,8 @@ func NewMetricReporter() *MetricReporter {
 	m.groups = []Collectable{
 		NewCoordinatorMetricGroup(&m),
 		NewDbStatusMetricGroup(&m),
+		NewDbClusterFaultTolerance(&m),
+		NewDbClusterLock(&m),
 		NewWorkloadOperationsMetricGroup(&m),
 		NewWorkloadTransactionsMetricGroup(&m),
 		NewWorkloadKeysMetricGroup(&m),

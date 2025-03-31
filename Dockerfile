@@ -3,7 +3,7 @@ FROM golang:1.22 AS download-env
 ENV FDB_DOWNLOAD_URL="https://github.com/apple/foundationdb/releases/download"
 ENV CGO_ENABLED=1
 ENV GOOS=linux
-ENV MULTVERSIONS="6.3.23 7.1.31"
+ENV MULTVERSIONS="6.3.23 7.1.31 7.3.59"
 ENV VERSION="7.3.59"
 
 RUN for v in $MULTVERSIONS; do \

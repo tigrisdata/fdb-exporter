@@ -15,6 +15,8 @@
 package metrics
 
 import (
+	"os"
+
 	"github.com/rs/zerolog/log"
 	"github.com/tigrisdata/fdb-exporter/models"
 )
@@ -38,12 +40,19 @@ func NewProcessesMetricGroup(reporter *MetricReporter) *ProcessesMetricGroup {
 func (p *ProcessesMetricGroup) getTags(processName string, process *models.Process) map[string]string {
 	tags := GetBaseTags()
 
-	// Try to tag the name with the human readable name (as published by the operator) instead of the key in the json
-	if process.Locality != nil {
-		tags["fdb_pod_name"] = process.Locality.InstanceId
+	if os.Getenv("FDB_DEPLOYMENT_NO_K8S") == "" {
+		// For no Kubenetes deployments, metrics will be tagged with the machine hostname and the address of the process
+		tags["machine_id"] = process.MachineId
+		tags["address"] = process.Address
 		tags["zone"] = process.Locality.ZoneId
 	} else {
-		tags["fdb_pod_name"] = processName
+		// Try to tag the name with the human readable name (as published by the operator) instead of the key in the json
+		if process.Locality != nil {
+			tags["fdb_pod_name"] = process.Locality.InstanceId
+			tags["zone"] = process.Locality.ZoneId
+		} else {
+			tags["fdb_pod_name"] = processName
+		}
 	}
 	tags["class_type"] = process.ClassType
 	// On the same tally scope the same tag set should be present

@@ -17,9 +17,15 @@ The configuration is done through the following environment variables:
 * `FDB_VERSION`: exposed directly as the `version` tag in all metrics
 * `FDB_CLUSTER_NAME`: exposed directly as the `cluster` tag in all metrics
 * `FDB_EXPORTER_HTTP_LISTEN_ADDR`: the address where the built-in web server will listen on and expose the metrics on `/metrics` url. The default is `:8080` 
+
+Optional Variables: 
+
 * `FDB_TLS_CERT_FILE`: the TLS cert file (.crt)  
 * `FDB_TLS_KEY_FILE`: the TLS key file (.key)
 * `FDB_TLS_VERIFY_PEERS`: the TLS verify peers directive
+* `FDB_DEPLOYMENT_NO_K8S`: when set to `""` will make it so the metric tag `fdb_pod_name` will be swapped for `machineid` and the `address` will be set for process specific metrics
+* `FDB_EXPORTER_NO_BACKUP_REPORTING`: when set to `""`, the exporter won't report any metrics about backups
+
 
 Building
 --------

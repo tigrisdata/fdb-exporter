@@ -44,7 +44,9 @@ func (p *ProcessesMetricGroup) getTags(processName string, process *models.Proce
 		// For no Kubenetes deployments, metrics will be tagged with the machine hostname and the address of the process
 		tags["machine_id"] = process.MachineId
 		tags["address"] = process.Address
-		tags["zone"] = process.Locality.ZoneId
+		if process.Locality != nil {
+			tags["zone"] = process.Locality.ZoneId
+		}
 	} else {
 		// Try to tag the name with the human readable name (as published by the operator) instead of the key in the json
 		if process.Locality != nil {

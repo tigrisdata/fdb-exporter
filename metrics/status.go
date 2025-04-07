@@ -23,6 +23,13 @@ func isValidClusterLockState(status *models.FullStatus) bool {
 	return true
 }
 
+func isValidClusterQos(status *models.FullStatus) bool {
+	if status == nil || status.Cluster == nil || status.Cluster.Qos == nil {
+		return false
+	}
+	return true
+}
+
 func isValidClusterFaultTolerance(status *models.FullStatus) bool {
 	if status == nil || status.Cluster == nil || status.Cluster.FaultTolerance == nil {
 		return false

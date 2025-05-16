@@ -28,6 +28,7 @@ type ProcessesMetricGroup struct {
 func NewProcessesMetricGroup(reporter *MetricReporter) *ProcessesMetricGroup {
 	parentScope := reporter.GetScopeOrExit("cluster")
 	p := &ProcessesMetricGroup{*newMetricGroup("processes", parentScope, reporter)}
+	p.AddScope(parentScope, "grv_count", "grv")
 	p.AddScope(parentScope, "grv_lat", "grv")
 	p.AddScope(parentScope, "commit_lat", "commit")
 	p.AddScope(parentScope, "read_lat", "read")
@@ -102,6 +103,12 @@ func (p *ProcessesMetricGroup) getLatencyTags(processName string, process *model
 	return tags
 }
 
+func (p *ProcessesMetricGroup) getTagsWithPriority(processName string, process *models.Process, priority string) map[string]string {
+	tags := p.getTags(processName, process)
+	tags["priority"] = priority
+	return tags
+}
+
 func (p *ProcessesMetricGroup) getLatencyTagsWithPriority(processName string, process *models.Process, quantile string, priority string) map[string]string {
 	tags := p.getLatencyTags(processName, process, quantile)
 	tags["priority"] = priority
@@ -171,7 +178,12 @@ func (p *ProcessesMetricGroup) GetMetrics(status *models.FullStatus) {
 			switch role.Role {
 			case "grv_proxy":
 				if role.GrvLatencyStatistics != nil {
+					grvCountScope := p.GetScopeOrExit("grv_count")
 					grvLatScope := p.GetScopeOrExit("grv_lat")
+					defaultCountTags := p.getTagsWithPriority(processName, &process, "default")
+					batchCountTags := p.getTagsWithPriority(processName, &process, "batch")
+					SetGauge(grvCountScope, "count", defaultCountTags, role.GrvLatencyStatistics.Default.Count)
+					SetGauge(grvCountScope, "count", batchCountTags, role.GrvLatencyStatistics.Batch.Count)
 					defaultMedianTags := p.getLatencyTagsWithPriority(processName, &process, "0.5", "default")
 					batchMedianTags := p.getLatencyTagsWithPriority(processName, &process, "0.5", "batch")
 					SetGauge(grvLatScope, "latency", defaultMedianTags, role.GrvLatencyStatistics.Default.Median)

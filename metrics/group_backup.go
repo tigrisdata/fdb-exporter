@@ -72,6 +72,7 @@ func (b *BackupMetricGroup) getTaggedMetrics(status *models.FullStatus) {
 		tagMetrics["is_running"] = backupTag.RunningBackup
 		tagMetrics["running_is_restorable"] = backupTag.RunningBackupIsRestorable
 		tagMetrics["last_restorable_seconds_behind"] = backupTag.LastRestorableSecondsBehind
+		tagMetrics["range_bytes_written"] = backupTag.RangeBytesWritten
 		SetMultipleGauges(taggedScope, tagMetrics, taggedBackupTags)
 	}
 }

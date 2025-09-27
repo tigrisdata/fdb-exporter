@@ -236,6 +236,10 @@ func (p *ProcessesMetricGroup) GetMetrics(status *models.FullStatus) {
 					metrics["durability_bytes"] = role.DurableBytes.Counter
 				}
 
+				// Storage queue size, if this is growing, it means the storages can't keep up with the load
+				// and they need to be scaled out.
+				metrics["storage_queue_length"] = role.InputBytes.Counter - role.DurableBytes.Counter
+
 				if role.ReadLatencyStatistics != nil {
 					readLatScope := p.GetScopeOrExit("read_lat")
 					medianTags := p.getLatencyTags(processName, &process, "0.5")

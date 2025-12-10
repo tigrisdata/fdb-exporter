@@ -54,6 +54,7 @@ type ProcessLocality struct {
 	InstanceId string `json:"instance_id"`
 	MachineId  string `json:"machineid"`
 	ProcessId  string `json:"processid"`
+	Process_Id string `json:"process_id"`
 	ZoneId     string `json:"zoneid"`
 }
 

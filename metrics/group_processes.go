@@ -54,7 +54,7 @@ func (p *ProcessesMetricGroup) getTags(processName string, process *models.Proce
 		tags["zone"] = "unknown"
 		// Try to tag the name with the human readable name (as published by the operator) instead of the key in the json
 		if process.Locality != nil {
-			tags["fdb_pod_name"] = process.Locality.InstanceId
+			tags["fdb_pod_name"] = process.Locality.ProcessId
 			tags["zone"] = process.Locality.ZoneId
 		}
 	}

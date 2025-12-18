@@ -133,6 +133,7 @@ func (p *ProcessesMetricGroup) GetMetrics(status *models.FullStatus) {
 		tags := p.getTags(processName, &process)
 		metrics["degraded"] = process.Degraded
 		metrics["excluded"] = process.Excluded
+		metrics["run_loop_busy"] = process.RunLoopBusy
 		if process.Cpu != nil {
 			metrics["cpu_cores"] = process.Cpu.UsageCores
 		}

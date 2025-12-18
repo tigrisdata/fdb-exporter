@@ -30,6 +30,7 @@ func TestProcessSingleBasic(t *testing.T) {
 	assert.False(t, process.Excluded)
 	assert.Equal(t, process.FaultDomain, "2f768c26fc0f01ce8af5402f7779b62c")
 	assert.Equal(t, process.MachineId, "2f768c26fc0f01ce8af5402f7779b62c")
+	assert.Greater(t, process.RunLoopBusy, 0.0)
 }
 
 func TestProcessCpuSingleBasic(t *testing.T) {

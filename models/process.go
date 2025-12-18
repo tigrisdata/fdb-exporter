@@ -30,6 +30,7 @@ type Process struct {
 	Messages    []ProcessMessage `json:"messages"`
 	Network     *ProcessNetwork  `json:"network"`
 	Roles       []ProcessRole    `json:"roles"`
+	RunLoopBusy float64          `json:"run_loop_busy"`
 }
 
 type ProcessCpu struct {

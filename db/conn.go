@@ -118,6 +118,16 @@ func GetStatus() (*models.FullStatus, error) {
 		ulog.E(err, msg)
 		return nil, err
 	}
+
+	if os.Getenv("DEBUG_LOG_INCOMPLETE_STATUS") == "true" {
+		if status.Cluster == nil ||
+			status.Cluster.DatabaseLockState == nil ||
+			status.Cluster.FaultTolerance == nil ||
+			status.Cluster.Data == nil {
+			log.Debug().Str("status_json", string(statusJson.([]byte))).Msg("status json is missing cluster fields")
+		}
+	}
+
 	return &status, nil
 }
 

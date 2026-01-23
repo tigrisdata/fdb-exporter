@@ -15,8 +15,10 @@
 package metrics
 
 import (
+	"context"
 	"net/http"
 	"os"
+	"sync"
 	"time"
 
 	ulog "github.com/tigrisdata/fdb-exporter/util/log"
@@ -56,24 +58,46 @@ func (m *MetricProvider) Close() {
 
 // Periodic data collection, called from main in a goroutine
 func (mp *MetricProvider) Collect() {
-	// TODO make this configurable
-	interval := 10 * time.Second
+	var reporterSwap sync.Mutex
+
+	interval := 3 * time.Second
 	ticker := time.NewTicker(interval)
+	defer ticker.Stop()
 
 	if err := mp.reporter.collectOnce(); err != nil {
 		ulog.E(err, "failed to collect metrics")
 	}
+
 	for range ticker.C {
-		newReporter := NewMetricReporter()
-		if err := newReporter.collectOnce(); err != nil {
-			ulog.E(err, "failed to collect metrics in a tick")
+		ctx, cancel := context.WithTimeout(context.Background(), 2*time.Second)
+
+		done := make(chan struct{})
+
+		go func() {
+			defer close(done)
+
+			newReporter := NewMetricReporter()
+			if err := newReporter.collectOnce(); err != nil {
+				ulog.E(err, "failed to collect metrics in a tick")
+				return
+			}
+
+			time.Sleep(1 * time.Second)
+
+			reporterSwap.Lock()
+			oldReporter := mp.reporter
+			mp.reporter = newReporter
+			oldReporter.Close()
+			reporterSwap.Unlock()
+		}()
+
+		select {
+		case <-done:
+			// finished within timeout
+		case <-ctx.Done():
+			ulog.E(ctx.Err(), "metric collection tick timed out")
 		}
-		time.Sleep(1 * time.Second) // Wait a bit before serving new tally's data (otherwise the first query will return 0)
 
-		oldReporter := mp.reporter
-		mp.reporter = newReporter
-
-		oldReporter.Close()
+		cancel()
 	}
-	defer ticker.Stop()
 }

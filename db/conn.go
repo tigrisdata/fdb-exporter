@@ -17,6 +17,7 @@ package db
 import (
 	"bufio"
 	"encoding/json"
+	"fmt"
 	"os"
 	"regexp"
 	"strconv"
@@ -100,7 +101,18 @@ func getFdb() fdb.Database {
 	return db
 }
 
-func GetStatus() (*models.FullStatus, error) {
+func IsStatusIncomplete(status *models.FullStatus) bool {
+	if status.Cluster == nil ||
+		status.Cluster.DatabaseLockState == nil ||
+		status.Cluster.FaultTolerance == nil ||
+		status.Cluster.Data == nil ||
+		status.Cluster.DatabaseAvailable == false {
+		return true
+	}
+	return false
+}
+
+func getStatusOnce() (*models.FullStatus, error) {
 	start := time.Now()
 	conn := getFdb()
 	var status models.FullStatus
@@ -122,11 +134,7 @@ func GetStatus() (*models.FullStatus, error) {
 	}
 
 	if os.Getenv("DEBUG_LOG_INCOMPLETE_STATUS") == "true" {
-		if status.Cluster == nil ||
-			status.Cluster.DatabaseLockState == nil ||
-			status.Cluster.FaultTolerance == nil ||
-			status.Cluster.Data == nil ||
-			status.Cluster.DatabaseAvailable == false {
+		if IsStatusIncomplete(&status) {
 			statusString := string(statusJson.([]byte))
 			log.Debug().Str("status_json", statusString).Msg("status json is missing cluster fields")
 
@@ -135,11 +143,23 @@ func GetStatus() (*models.FullStatus, error) {
 				Dur("took", d).
 				Str("status_json", statusString).
 				Msg("status json is missing cluster fields")
-
+			return nil, fmt.Errorf("incomplete status")
 		}
 	}
-
 	return &status, nil
+}
+
+func GetStatus() (*models.FullStatus, error) {
+	status, err := getStatusOnce()
+	if err != nil {
+		log.Error().Err(err).Msg("failed to get status, retrying")
+		time.Sleep(1 * time.Second)
+		status, err = getStatusOnce()
+		if err != nil {
+			log.Error().Err(err).Msg("failed to get status, retry failed")
+		}
+	}
+	return status, err
 }
 
 func isTLSmode(c *string) bool {

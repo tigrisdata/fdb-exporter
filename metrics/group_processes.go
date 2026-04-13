@@ -153,6 +153,7 @@ func (p *ProcessesMetricGroup) GetMetrics(status *models.FullStatus) {
 		if process.Memory != nil {
 			metrics["mem_available_bytes"] = process.Memory.AvailableBytes
 			metrics["mem_limit_bytes"] = process.Memory.LimitBytes
+			metrics["mem_rss_bytes"] = process.Memory.RssBytes
 			metrics["mem_unused_allocated_memory"] = process.Memory.UnusedAllocatedMemory
 			metrics["mem_unused_bytes"] = process.Memory.UsedBytes
 		}

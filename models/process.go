@@ -62,6 +62,7 @@ type ProcessLocality struct {
 type ProcessMemory struct {
 	AvailableBytes        int `json:"available_bytes"`
 	LimitBytes            int `json:"limit_bytes"`
+	RssBytes              int `json:"rss_bytes"`
 	UnusedAllocatedMemory int `json:"unused_allocated_memory"`
 	UsedBytes             int `json:"used_bytes"`
 }
